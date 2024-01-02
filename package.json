@@ -1,0 +1,16 @@
+{
+  "name": "nebi",
+  "version": "2.0.0",
+  "description": "🤖📚 | Bot do Discord criado para comunidade da Novel Brasil!",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ."
+  },
+  "keywords": [],
+  "author": "KingTimer12",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.56.0"
+  }
+}
