@@ -7,8 +7,8 @@ module.exports = {
     ,
 
     /** 
-     * @param {Client} client
-     * @param {CommandInteraction} interaction
+     * @param {import("discord.js").Client} client
+     * @param {import("discord.js").CommandInteraction} interaction
      */
 
     run: async (client, interaction) => {
