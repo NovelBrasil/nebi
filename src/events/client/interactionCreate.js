@@ -1,3 +1,6 @@
+/**
+ * @param {import("discord.js").Client} client
+*/
 module.exports = async (client, interaction) => {
     if (interaction.isCommand() || interaction.isUserContextMenuCommand()) {
         const cmd = client.commands.get(interaction.commandName)
