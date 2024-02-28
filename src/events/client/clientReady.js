@@ -1,5 +1,8 @@
 const { ActivityType } = require(`discord.js`)
 
+/**
+ * @param {import("discord.js").Client} client
+*/
 module.exports = async (client) => {
     const activities = [
         { type: ActivityType.Playing, name: `meu jogo!` },

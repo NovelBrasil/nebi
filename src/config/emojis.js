@@ -2,7 +2,7 @@ class EmojiConfig {
     #EMOJIS = new Map()
 
     /**
-     * @param {Client} client  
+     * @param {import("discord.js").Client} client  
      */
     constructor(client) {
         client.emojis.cache.forEach(emoji => {
