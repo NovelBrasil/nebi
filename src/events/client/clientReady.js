@@ -9,8 +9,11 @@ module.exports = async (client) => {
         { type: ActivityType.Listening, name: `NovelCastBR` },
         { type: ActivityType.Watching, name: `vídeos da Novel Brasil.` },
     ]
+    console.log(`[Event] Ready calling.`)
+    const randomPresence = activities[Math.floor(Math.random() * activities.length)]
+    client.user.setPresence({ activities: [randomPresence], status: `online` })
     setInterval(async function () {
         const randomPresence = activities[Math.floor(Math.random() * activities.length)]
         client.user.setPresence({ activities: [randomPresence], status: `online` })
-    }, 50000)
+    }, 3600*1000)
 }
