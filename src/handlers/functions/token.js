@@ -17,6 +17,10 @@ module.exports = class TokenHandler {
         this.client.tokenApi = await this.token()
     }
 
+    async update() {
+        this.client.tokenApi = await this.token()
+    }
+
     /**
      * @returns {Promise<String>}
     */
@@ -44,10 +48,14 @@ module.exports = class TokenHandler {
                     Authorization: token
                 }
             })
-            if (response.status == 200)
-                return response.data[`expired`]
-            else return response.data[`message`]
-        } catch {
+            if (response.status == 204)
+                return false
+        } catch (err) {
+            const response = err.response
+            if (response.status == 404)
+                return true
+            if (response.data.code == `ERR_JWT_EXPIRED`)
+                return true
             throw Error(`Erro ao tentar criar conexão.`)
         }
     }
@@ -60,8 +68,6 @@ module.exports = class TokenHandler {
     async #generateToken(path, noToken = false) {
         try {
             const read = readJSON(path)
-            console.log(!read)
-            console.log(noToken)
 
             if (!read && !noToken) {
                 const token = await this.#newToken()
@@ -79,13 +85,13 @@ module.exports = class TokenHandler {
                 const oldToken = read[`token`]
                 if (!oldToken) return await this.#generateToken(path, true)
                 const expired = await this.#checkToken(oldToken)
-                if (expired) {
-                    console.log(expired)
-                    return await this.#generateToken(path, true)
-                }
+                if (expired) { return await this.#generateToken(path, true) }
                 return oldToken
             }
-        } catch { return undefined }
+        } catch (err) {
+            console.error(err)
+            return undefined
+        }
     }
 
     /**
@@ -95,7 +101,10 @@ module.exports = class TokenHandler {
         const path = `./src/config/json/token.json`
         try {
             return await this.#generateToken(path)
-        } catch { return undefined }
+        } catch (err) {
+            console.error(err)
+            return undefined
+        }
     }
 
 }
