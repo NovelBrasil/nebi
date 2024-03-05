@@ -131,3 +131,4 @@ dist
 .pnp.*
 
 src/config/json/token.json
+pnpm-lock.yaml
