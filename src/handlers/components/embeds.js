@@ -1,25 +1,23 @@
 const { EmbedBuilder } = require(`discord.js`)
 
 class EmbedHandler {
+
     /**
-    * @param {Client} client
+    * @param {import("discord.js").Client} client
     */
     constructor(client) {
         this.client = client
     }
 
     load() {
-        this.client.templateEmbed = this.#templateEmbed()
-    }
-
-    #templateEmbed() {
-        return new EmbedBuilder()
-            .setColor(this.client.config.getColor(`default`))
-            .setFooter({
-                text: `Novel Brasil © 2020 - ${new Date().getFullYear()}`,
-                iconURL: this.client.config.getIconNB()
-            })
-            .setTimestamp()
+        /**
+         * @returns {import("discord.js").EmbedBuilder}
+        */
+        this.client.logEmbed = function (color) {
+            return new EmbedBuilder()
+                .setColor(color)
+                .setTimestamp()
+        }
     }
 }
 
