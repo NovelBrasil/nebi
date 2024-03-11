@@ -3,6 +3,9 @@ const fs = require(`fs`)
 
 class CommandHandler {
 
+    /**
+    * @param {import("discord.js").Client} client
+    */
     constructor(client) {
         this.client = client
     }

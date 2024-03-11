@@ -60,19 +60,21 @@ client.config.emoji = emoji
 const token = config.isDevMode() ? process.env.DISCORD_TEST_TOKEN : process.env.DISCORD_MAIN_TOKEN
 
 client.commands = new Collection()
+client.handlers = new Collection()
 
 // Load handlers
 fs.readdirSync(`./src/handlers`).forEach((dir) => {
-    fs.readdirSync(`./src/handlers/${dir}`).forEach((handler) => {
+    fs.readdirSync(`./src/handlers/${dir}`).forEach(async (handler) => {
         const Handler = require(`./handlers/${dir}/${handler}`)
         const HandlerInstance = new Handler(client)
-        HandlerInstance.load()
+        await HandlerInstance.load()
+        client.handlers.set(handler.replace(`.js`, ``), HandlerInstance)
+        console.log(handler)
     })
 })
 
 client.login(token)
 
-console.clear()
 console.log(`\u001b[0m`)
 console.log(chalk.yellow(`© Novel Brasil | 2020 - ${new Date().getFullYear()}`))
 console.log(chalk.yellow(`All rights reserved`))
