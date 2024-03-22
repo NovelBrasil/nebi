@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require(`discord.js`)
 const { createCard } = require(`./card`)
 const { AttachmentBuilder } = require(`discord.js`)
+const { createAccount } = require(`./account`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,6 +14,10 @@ module.exports = {
                     user.setName(`user`)
                         .setDescription(`Veja o card de outra pessoa`)
                 )
+        )
+        .addSubcommand(sub =>
+            sub.setName(`criar`)
+                .setDescription(`Crie um profile para si.`)
         )
     ,
 
@@ -33,6 +38,12 @@ module.exports = {
             const card = await createCard(member, token)
             const attachment = new AttachmentBuilder(card, { name: `profile.png` })
             return await interaction.followUp({ files: [attachment] })
+        }
+
+        if (subcommand.name == `criar`) {
+            await interaction.deferReply()
+            const response = await createAccount(member, token)
+            return await interaction.followUp(response)
         }
     },
 }

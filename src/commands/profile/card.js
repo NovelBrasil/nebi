@@ -1,4 +1,5 @@
 const { default: axios } = require(`axios`)
+const { fetchAccount } = require(`./account`)
 
 /**
  * @param {import("discord.js").GuildMember} member
@@ -15,20 +16,28 @@ const createCard = async (member, token) => {
     const month = monthNumber >= 10 ? `${monthNumber}` : `0${monthNumber}`
 
     try {
+        const account = await fetchAccount(member, token)
+        const aboutMe = account.aboutme
+        const glows = account.balance.glows
+        const currExp = account.xp.current
+        const targExp = account.xp.max
+        const level = account.level.current
+        const background = account.background
+        const flag = account.flag
+
         const response = await axios.post(`${process.env.NEBI_API_URL}/profile/${member.id}`, {
             badgesName: [`dev`, `staff`, `nitro`, `verify`],
             avatar,
             username,
-            aboutMe: `Timer é o programador mais triste da NB`,
-            level: 1,
-            glows: 0,
-            currExp: 0,
-            targExp: 400,
+            aboutMe,
+            level,
+            glows,
+            currExp,
+            targExp,
             rank: 1,
             joinDate: `${day}/${month}`,
-            background: `default`,
-            flag: `xm`
-
+            background,
+            flag
         }, {
             headers: {
                 Authorization: token
