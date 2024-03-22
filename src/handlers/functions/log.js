@@ -20,8 +20,8 @@ class LogHandler {
         *  }} data
         */
         this.client.sendLog = function (client, color = `default`, data) {
-            const forumId = `1216122012020510720`
-            const serverGuildId = `1046080828716896297`
+            const forumId = process.env.DEV_SERVER_FORUM_ID
+            const serverGuildId = process.env.DEV_SERVER_GUILD_ID
 
             const serverDev = client.guilds.cache.find(f => f.id == serverGuildId)
             if (!serverDev) throw Error(`Servidor de desenvolvedores não encontrado.`)
@@ -30,7 +30,7 @@ class LogHandler {
             if (!logChannel.isThreadOnly()) throw Error(`Esse canal não é um fórum.`)
             const threads = logChannel.threads
             const timeDate = new Date()
-            const month = timeDate.getMonth() < 0 ? `${timeDate.getMonth() + 1}` : `0${timeDate.getMonth() + 1}`
+            const month = timeDate.getMonth() >= 9 ? `${timeDate.getMonth() + 1}` : `0${timeDate.getMonth() + 1}`
             const name = `${timeDate.getDate()}/${month}/${timeDate.getFullYear()}`
             const embed = client.logEmbed(client.config.getColor(color))
             embed.setTitle(data.title)
