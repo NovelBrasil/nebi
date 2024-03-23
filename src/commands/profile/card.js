@@ -17,13 +17,14 @@ const createCard = async (member, token) => {
 
     try {
         const account = await fetchAccount(member, token)
-        const aboutMe = account.aboutme
+        const aboutMe = account.aboutMe
         const glows = account.balance.glows
         const currExp = account.xp.current
         const targExp = account.xp.max
         const level = account.level.current
         const background = account.background
         const flag = account.flag
+        const rank = account.position
 
         const response = await axios.post(`${process.env.NEBI_API_URL}/profile/${member.id}`, {
             badgesName: [`dev`, `staff`, `nitro`, `verify`],
@@ -34,7 +35,7 @@ const createCard = async (member, token) => {
             glows,
             currExp,
             targExp,
-            rank: 1,
+            rank,
             joinDate: `${day}/${month}`,
             background,
             flag
@@ -50,6 +51,8 @@ const createCard = async (member, token) => {
         }
     } catch (err) {
         const response = err.response
+        if (!response)
+            throw Error(err)
         if (response.status == 400)
             throw Error(`UserId em falta!`)
         if (response.status == 401)
