@@ -1,5 +1,6 @@
 const { default: axios } = require(`axios`)
 const { fetchAccount } = require(`./account`)
+const { numberDecimal } = require(`../../utils/numberFormat`)
 
 /**
  * @param {import("discord.js").GuildMember} member
@@ -7,38 +8,21 @@ const { fetchAccount } = require(`./account`)
  * @returns {Promise<Buffer>}
 */
 const createCard = async (member, token) => {
-    const username = member.displayName
     const avatar = member.displayAvatarURL({ extension: `png` })
     const joined = member.joinedTimestamp
     const date = new Date(joined)
-    const day = date.getDate() >= 10 ? `${date.getDate()}` : `0${date.getDate()}`
+    const day = numberDecimal(date.getDate())
     const monthNumber = date.getMonth() + 1
-    const month = monthNumber >= 10 ? `${monthNumber}` : `0${monthNumber}`
+    const month = numberDecimal(monthNumber)
 
     try {
         const account = await fetchAccount(member, token)
-        const aboutMe = account.aboutMe
-        const glows = account.balance.glows
-        const currExp = account.xp.current
-        const targExp = account.xp.max
-        const level = account.level.current
-        const background = account.background
-        const flag = account.flag
-        const rank = account.position
 
         const response = await axios.post(`${process.env.NEBI_API_URL}/profile/${member.id}`, {
-            badgesName: [`dev`, `staff`, `nitro`, `verify`],
+            ...account,
             avatar,
-            username,
-            aboutMe,
-            level,
-            glows,
-            currExp,
-            targExp,
-            rank,
+            badgesName: [`dev`, `staff`, `nitro`, `verify`],
             joinDate: `${day}/${month}`,
-            background,
-            flag
         }, {
             headers: {
                 Authorization: token

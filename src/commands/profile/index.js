@@ -8,11 +8,11 @@ module.exports = {
         .setName(`profile`)
         .setDescription(`Veja seu profile.`)
         .addSubcommand(sub =>
-            sub.setName(`card`)
+            sub.setName(`ver`)
                 .setDescription(`Card com suas informações.`)
                 .addUserOption(user =>
                     user.setName(`user`)
-                        .setDescription(`Veja o card de outra pessoa`)
+                        .setDescription(`O usuário cujo card será mostrado.`)
                 )
         )
         .addSubcommand(sub =>
@@ -33,7 +33,7 @@ module.exports = {
         const member = await client.guilds.cache.map(async g => await g.members.fetch({ user: u })).at(0)
         if (!member) return
 
-        if (subcommand.name == `card`) {
+        if (subcommand.name == `ver`) {
             await interaction.deferReply()
             const card = await createCard(member, token)
             const attachment = new AttachmentBuilder(card, { name: `profile.png` })

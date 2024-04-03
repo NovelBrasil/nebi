@@ -51,7 +51,16 @@ const fetchAccount = async (member, token) => {
 
         response = await client.get(`/${userId}/ranking`)
         const position = response.data.position
-        return { ...data, position }
+        const aboutMe = data.aboutMe
+        const glows = data.balance.glows
+        const currExp = data.xp.current
+        const targExp = data.xp.max
+        const level = data.level.current
+        const background = data.background
+        const flag = data.flag
+        const rank = position
+        const username = data.username
+        return { aboutMe, glows, currExp, targExp, level, background, flag, rank, username, position }
     } catch (err) {
         const response = err.response
         if (response.status == 400)
