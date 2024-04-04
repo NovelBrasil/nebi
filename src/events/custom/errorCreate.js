@@ -28,7 +28,7 @@ module.exports = async (client, err, commandName, interaction) => {
                 },
                 {
                     name: `> Erro:`,
-                    value: `\`\`\`${err.replace(/`/g, `'`)}\`\`\``.slice(0, 4096)
+                    value: `\`\`\`${err.message.replace(/`/g, `'`)}\`\`\``.slice(0, 4096)
                 }
             ]
         })
