@@ -8,6 +8,7 @@ module.exports = async (client, interaction) => {
             client.emit(`commandExec`, interaction.commandName, interaction)
         }).catch(err => {
             client.emit(`errorCreate`, err, interaction.commandName, interaction)
+            console.error(err)
         })
     }
 }

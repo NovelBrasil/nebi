@@ -69,7 +69,6 @@ fs.readdirSync(`./src/handlers`).forEach((dir) => {
         const HandlerInstance = new Handler(client)
         await HandlerInstance.load()
         client.handlers.set(handler.replace(`.js`, ``), HandlerInstance)
-        console.log(handler)
     })
 })
 
