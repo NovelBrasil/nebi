@@ -1,13 +1,13 @@
 const { default: axios } = require(`axios`)
-const { fetchAccount } = require(`./account`)
 const { numberDecimal } = require(`../../utils/numberFormat`)
 
 /**
  * @param {import("discord.js").GuildMember} member
  * @param {String} token
+ * @param {any} account
  * @returns {Promise<Buffer>}
 */
-const createCard = async (member, token) => {
+const createCard = async (member, token, account) => {
     const avatar = member.displayAvatarURL({ extension: `png` })
     const joined = member.joinedTimestamp
     const date = new Date(joined)
@@ -16,8 +16,6 @@ const createCard = async (member, token) => {
     const month = numberDecimal(monthNumber)
 
     try {
-        const account = await fetchAccount(member, token)
-
         const response = await axios.post(`${process.env.NEBI_API_URL}/profile/${member.id}`, {
             ...account,
             avatar,
