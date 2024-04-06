@@ -19,6 +19,10 @@ module.exports = {
             sub.setName(`criar`)
                 .setDescription(`Crie um profile para si.`)
         )
+        .addSubcommand(sub =>
+            sub.setName(`carteira`)
+                .setDescription(`Veja o quanto há na sua carteira.`)
+        )
     ,
 
     /** 
@@ -48,7 +52,7 @@ module.exports = {
         }
 
         if (subcommand.name == `carteira`) {
-            return await interaction.followUp({ content: `Você tem em sua carteira: \`${account.balance.glows}\`` })
+            return await interaction.followUp({ content: `Seu saldo é: \`${account.balance.glows}\` ${account.balance.glows == 1 ? `glow` : `glows`}` })
         }
     },
 }
