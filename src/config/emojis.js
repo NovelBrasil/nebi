@@ -6,7 +6,7 @@ class EmojiConfig {
      */
     constructor(client) {
         client.emojis.cache.forEach(emoji => {
-            this.#EMOJIS.set(emoji.name, `<${emoji.identifier}>`)
+            this.#EMOJIS.set(emoji.name, `<:${emoji.identifier}>`)
         })
     }
 

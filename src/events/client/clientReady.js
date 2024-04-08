@@ -1,4 +1,5 @@
 const { ActivityType } = require(`discord.js`)
+const EmojiConfig = require(`../../config/emojis`)
 
 /**
  * @param {import("discord.js").Client} client
@@ -9,6 +10,10 @@ module.exports = async (client) => {
         { type: ActivityType.Listening, name: `NovelCastBR` },
         { type: ActivityType.Watching, name: `vídeos da Novel Brasil.` },
     ]
+
+    // Emoji
+    const emoji = new EmojiConfig(client)
+    client.config.emoji = emoji
 
     console.log(`[Event] Ready calling.`)
     console.log(`[Token] ${client.tokenApi}`)

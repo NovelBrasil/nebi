@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require(`discord.js`)
 const { createCard } = require(`./card`)
 const { AttachmentBuilder } = require(`discord.js`)
 const { createAccount, fetchAccount } = require(`./account`)
+const { openMenu } = require(`./badges`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,6 +23,10 @@ module.exports = {
         .addSubcommand(sub =>
             sub.setName(`carteira`)
                 .setDescription(`Veja o quanto há na sua carteira.`)
+        )
+        .addSubcommand(sub =>
+            sub.setName(`medalhas`)
+                .setDescription(`Gerencie suas medalhas.`)
         )
     ,
 
@@ -53,6 +58,10 @@ module.exports = {
 
         if (subcommand.name == `carteira`) {
             return await interaction.followUp({ content: `Seu saldo é: \`${account.balance.glows}\` ${account.balance.glows == 1 ? `glow` : `glows`}` })
+        }
+
+        if (subcommand.name == `medalhas`) {
+            return await openMenu(interaction, account.badges)
         }
     },
 }
