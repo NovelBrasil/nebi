@@ -3,6 +3,7 @@ const { createCard } = require(`./card`)
 const { AttachmentBuilder } = require(`discord.js`)
 const { createAccount, fetchAccount } = require(`./account`)
 const { openMenu } = require(`./badges`)
+const { openMenuFlag } = require(`./flags`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -26,7 +27,15 @@ module.exports = {
         )
         .addSubcommand(sub =>
             sub.setName(`medalhas`)
-                .setDescription(`Gerencie suas medalhas.`)
+                .setDescription(`Veja sobre as medalhas.`)
+        )
+        .addSubcommand(sub =>
+            sub.setName(`bandeiras`)
+                .setDescription(`Veja sobre as bandeiras.`)
+        )
+        .addSubcommand(sub =>
+            sub.setName(`fundos`)
+                .setDescription(`Veja sobre os planos de fundo.`)
         )
     ,
 
@@ -62,6 +71,14 @@ module.exports = {
 
         if (subcommand.name == `medalhas`) {
             return await openMenu(interaction, account.badges)
+        }
+
+        if (subcommand.name == `bandeiras`) {
+            return await openMenuFlag(interaction)
+        }
+
+        if (subcommand.name == `fundos`) {
+            return await interaction.followUp(`Em desenvolvimento.`)
         }
     },
 }

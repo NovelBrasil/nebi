@@ -2,6 +2,7 @@ const { Client, Partials, GatewayIntentBits, Collection } = require(`discord.js`
 const chalk = require(`chalk`)
 const fs = require(`fs`)
 const DiscordConfig = require(`./config/bot`)
+const FlagsConfig = require(`./config/flags`)
 require(`dotenv`).config(`./.env`)
 
 // const fs = require('fs')
@@ -51,6 +52,10 @@ const client = new Client({
 const config = new DiscordConfig()
 config.setDevMode(true)
 client.config = config
+
+const flags = new FlagsConfig()
+flags.load()
+client.config.flags = flags
 
 const token = config.isDevMode() ? process.env.DISCORD_TEST_TOKEN : process.env.DISCORD_MAIN_TOKEN
 
