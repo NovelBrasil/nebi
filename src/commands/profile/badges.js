@@ -15,11 +15,6 @@ function getMainPage() {
                 inline: true
             },
             {
-                name: `📜 Todas Medalhas`,
-                value: `Veja todas as medalhas e suas formas de conseguir.`,
-                inline: true
-            },
-            {
                 name: `❌ Fechar`,
                 value: `Fechará o menu.`,
                 inline: true
@@ -35,13 +30,6 @@ function getMainPage() {
             action: `ur-badges`,
             button: new ButtonBuilder().setCustomId(`ur-badges`)
                 .setLabel(`Suas Medalhas`)
-                .setEmoji(`📜`)
-                .setStyle(ButtonStyle.Primary)
-        },
-        "all-badges": {
-            action: `all-badges`,
-            button: new ButtonBuilder().setCustomId(`all-badges`)
-                .setLabel(`Todas Medalhas`)
                 .setEmoji(`📜`)
                 .setStyle(ButtonStyle.Primary)
         },

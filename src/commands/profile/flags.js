@@ -81,7 +81,7 @@ function getFlagsPanel(emojis, index, page, maxPage) {
                 .setStyle(ButtonStyle.Secondary)
         }
     }
-    return new DiscordEmbedMenuPage(`flags-${page}`, embed, undefined, index, buttons)
+    return new DiscordEmbedMenuPage(`flags-${page}`, embed, undefined, page-1, buttons)
 }
 
 /**
