@@ -28,13 +28,15 @@ class SignHandler {
 
     /**
      * @param {String} id 
-     * @param {Guild} guild
+     * @param {import("discord.js").Guild} guild
      * @returns {String} 
      */
     getSign(id, guild) {
         const text = topicJson[id]
         let rawText = text.replace(`convert`, ``).replace(`convert`, ``)
-        return this.#extractString(rawText, `(`, `)`).map((result) => {
+        const extractedText = this.#extractString(rawText, `(`, `)`)
+        if (!extractedText.length) return rawText
+        return extractedText.map((result) => {
             return String(rawText).replace(
                 `(${result})`,
                 convertStringToEmoji(this.client, result.replace(`{count}`, guild.memberCount))

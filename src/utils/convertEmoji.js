@@ -11,11 +11,11 @@ const convertStringToEmoji = (client, input) => {
         let rawChar = input[i]
         let emojiText = ``
         if (rawChar.match(/[a-z]/i)) {
-            emojiText = emojiConfig.getEmoji(`z_letter${rawChar}`)
+            emojiText = emojiConfig.getEmoji(`z_letter${rawChar}`) || ``
         } else if (rawChar.match(/[0-9]/i)) {
-            emojiText = emojiConfig.getEmoji(`z_number${parseInt(rawChar)}`)
+            emojiText = emojiConfig.getEmoji(`z_number${parseInt(rawChar)}`) || ``
         } else if (rawChar !== ` `) {
-            let symbol = emojiConfig.getEmoji(charTable[rawChar])
+            let symbol = emojiConfig.getEmoji(charTable[rawChar]) || ``
             if (!symbol) continue
             emojiText = symbol
         } else {

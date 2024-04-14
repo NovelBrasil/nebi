@@ -63,7 +63,7 @@ client.commands = new Collection()
 client.handlers = new Collection()
 
 // Load handlers
-fs.readdirSync(`./src/handlers`).forEach((dir) => {
+fs.readdirSync(`./src/handlers`).reverse().forEach((dir) => {
     fs.readdirSync(`./src/handlers/${dir}`).forEach(async (handler) => {
         const Handler = require(`./handlers/${dir}/${handler}`)
         const HandlerInstance = new Handler(client)
