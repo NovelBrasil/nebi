@@ -56,7 +56,7 @@ function getYourBadgesPage(client, badges) {
 
     const embed = new EmbedBuilder({
         title: `Suas Medalhas`,
-        description: `**Legendas:**\n↪ Habilitadas: \`\`\`Aparecerá as suas medalhas que estão habilitadas, se tiver alguma.\`\`\`\n↪ Desabilitadas: \`\`\`Aparecerá as suas medalhas que estão habilitadas, se tiver alguma.\`\`\`\n**Comandos:**\n↪ Habilitar -> \`/medalha habilitar <id>\`\n↪ Desabilitar -> \`/medalha desabilitar <id>\`\n\n${badges.length == 0 ? `\n**Você não tem medalhas.**` : ``}`,
+        description: `**Legendas:**\n↪ Habilitadas: \`\`\`Aparecerá as suas medalhas que estão habilitadas, se tiver alguma.\`\`\`\n↪ Desabilitadas: \`\`\`Aparecerá as suas medalhas que estão desabilitadas, se tiver alguma.\`\`\`\n**Comandos:**\n↪ Habilitar -> \`/medalha habilitar <id>\`\n↪ Desabilitar -> \`/medalha desabilitar <id>\`\n\n${badges.length == 0 ? `\n**Você não tem medalhas.**` : ``}`,
         fields: badges.length > 0 ? [
             {
                 name: `Habilitadas`,
