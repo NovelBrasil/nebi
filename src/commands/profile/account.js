@@ -30,7 +30,7 @@ const createAccount = async (member, token) => {
 /**
  * @param {import("discord.js").GuildMember} member
  * @param {String} token
- * @returns {Promise<{ username: String, aboutMe: String, background: String, flag: String, balance: { glows: Number }, level: { current: Number, next: Number }, xp: { current: Number, max: Number }, badges: Number[] } | undefined>}
+ * @returns {Promise<{ username: String, aboutMe: String, background: String, flag: String, balance: { glows: Number }, level: { current: Number, next: Number }, xp: { current: Number, max: Number }, badges: { enabled: boolean, name: string }[] } | undefined>}
 */
 const fetchAccount = async (member, token) => {
     const userId = member.id

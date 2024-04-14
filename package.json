@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
+    "@novelbrasil/discord.js-embed-menu": "^1.2.5",
     "axios": "^1.6.7",
     "chalk": "^4.1.2",
     "discord.js": "^14.14.1",
