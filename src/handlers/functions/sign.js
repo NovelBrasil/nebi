@@ -1,7 +1,10 @@
+const { getData } = require(`../../commands/info/dataApi`)
 const topicJson = require(`../../config/json/topicChannel.json`)
 const { convertStringToEmoji } = require(`../../utils/convertEmoji`)
 
 class SignHandler {
+
+    #GENERAL_CHANNELS = [`geral1`, `geral2`]
     
     constructor(client) {
         this.client = client
@@ -31,7 +34,7 @@ class SignHandler {
      * @param {import("discord.js").Guild} guild
      * @returns {String} 
      */
-    getSign(id, guild) {
+    #getSign(id, guild) {
         const text = topicJson[id]
         let rawText = text.replace(`convert`, ``).replace(`convert`, ``)
         const extractedText = this.#extractString(rawText, `(`, `)`)
@@ -42,6 +45,26 @@ class SignHandler {
                 convertStringToEmoji(this.client, result.replace(`{count}`, guild.memberCount))
             )
         }).join()
+    }
+
+    /**
+     * @param {String} token
+     * @param {import("discord.js").Guild} guild
+     * @returns {Promise<void>} 
+     */
+    async setTopic(token, guild) {
+        try {
+            for (const key of this.#GENERAL_CHANNELS) {
+                const channelId = await getData(key, token)
+                if (channelId) {
+                    const channel = await guild.channels.fetch(channelId)
+                    if (channel) {
+                        const sign = this.#getSign(key, guild )
+                        channel.setTopic(sign)
+                    }
+                }
+            }
+        } catch { /* empty */ }
     }
 }
 

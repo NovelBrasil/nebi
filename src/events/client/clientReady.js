@@ -1,6 +1,5 @@
 const { ActivityType } = require(`discord.js`)
 const EmojiConfig = require(`../../config/emojis`)
-const { getData } = require(`../../commands/info/dataApi`)
 
 /**
  * @param {import("discord.js").Client} client
@@ -16,24 +15,12 @@ module.exports = async (client) => {
     const emoji = new EmojiConfig(client)
     client.config.emoji = emoji
 
-    const GENERAL_CHANNELS = [`geral1`, `geral2`]
-
     const token = client.tokenApi
     const guildId = client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
     const guild = client.guilds.cache.find(f => f.id == guildId)
 
-    try {
-        for (const key of GENERAL_CHANNELS) {
-            const channelId = await getData(key, token)
-            if (channelId) {
-                const channel = await guild.channels.fetch(channelId)
-                if (channel) {
-                    const sign = client.handlers.get(`sign`).getSign(key, guild )
-                    channel.setTopic(sign)
-                }
-            }
-        }
-    } catch { /* empty */ }
+    const signHandler = client.handlers.get(`sign`)
+    await signHandler.setTopic(token, guild)
 
     const randomPresence = activities[Math.floor(Math.random() * activities.length)]
     client.user.setPresence({ activities: [randomPresence], status: `online` })
