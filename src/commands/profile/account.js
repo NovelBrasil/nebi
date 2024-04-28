@@ -66,5 +66,32 @@ const fetchAccount = async (member, token) => {
     }
 }
 
+/**
+ * @param {import("discord.js").GuildMember} member
+ * @param {{ username: String, aboutMe: String, background: String, flag: String, glows: Number, level: Number, xp: Number, badges: { enabled: boolean, name: string }[] }} account
+ * @param {String} token
+ * @returns {Promise<String>}
+*/
+const updateAccount = async (member, account, token) => {
+    const userId = member.id
+    try {
+        const response = await axios.put(`${process.env.NEBI_API_URL}/user/${userId}`, account, {
+            headers: {
+                Authorization: token
+            }
+        })
+        if (response.status == 200) {
+            return response.data.message
+        }
+    } catch (err) {
+        const response = err.response
+        console.log(response)
+        if (response.status == 400)
+            throw Error(`UserId ou username em falta!`)
+        if (response.status == 401)
+            throw Error(`Não foi autorizado!`)
+        throw Error(`Erro ao fazer conexão.`)
+    }
+}
 
-module.exports = { createAccount, fetchAccount }
+module.exports = { createAccount, fetchAccount, updateAccount }
