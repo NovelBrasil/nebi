@@ -6,7 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(`medalha`)
         .setDescription(
-            `Armazenar informações cruciais para o funcionamento do bot.`
+            `Gerencie suas medalhas.`
         )
         .addSubcommand((subcommand) =>
             subcommand
