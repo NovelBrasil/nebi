@@ -45,7 +45,7 @@ module.exports = {
                         .setRequired(true)
                 )
         )
-        .setDefaultMemberPermissions(PermissionFlagsBits.CreatePublicThreads)
+        .setDefaultMemberPermissions(PermissionFlagsBits.CreatePrivateThreads)
     ,
 
     /** 

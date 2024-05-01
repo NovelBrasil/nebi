@@ -60,6 +60,7 @@ client.config.emoji = emoji
 const token = config.isDevMode() ? process.env.DISCORD_TEST_TOKEN : process.env.DISCORD_MAIN_TOKEN
 
 client.commands = new Collection()
+client.buttons = new Collection()
 client.handlers = new Collection()
 
 // Load handlers
