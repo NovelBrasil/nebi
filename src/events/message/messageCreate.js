@@ -16,11 +16,12 @@ module.exports = async (client, messageCreated) => {
     const member = messageCreated.member
     try {
         const account = await fetchAccount(member, token)
-        if (client.addCooldown(member.id, 5)) {
+        const cooldown = client.addCooldown(member.id, 5)
+        if (cooldown) {
             const xp_random = Math.floor(Math.random() * 9) + 1
-            const current_xp = account.xp.current
+            const current_xp = account.xp.current_raw
             const new_xp = current_xp + xp_random
-            await updateAccount(member, { xp: new_xp })
+            await updateAccount(member, { xp: new_xp }, token)
         }
     }
     catch {
@@ -29,11 +30,11 @@ module.exports = async (client, messageCreated) => {
 
         const today = Date.now()
 
-        const messages = await getMessage(member, token)
-
-        if (today < joined.getDate()) {
-            await createAccount(member, token)
-        } else if (messages.count >= 30) await createAccount(member, token)
+        if (today > joined.getTime()) await createAccount(member, token)
+        else {
+            const messages = await getMessage(member, token)
+            if (messages.count >= 30) await createAccount(member, token)
+        }
     }
 
     await addMessage(member, token)

@@ -94,4 +94,28 @@ const updateAccount = async (member, account, token) => {
     }
 }
 
-module.exports = { createAccount, fetchAccount, updateAccount }
+/**
+ * @param {import("discord.js").GuildMember} member
+ * @param {String} token
+ * @returns {Promise<Boolean>}
+*/
+const deleteAccount = async (member, token) => {
+    const userId = member.id
+    try {
+        const response = await axios.delete(`${process.env.NEBI_API_URL}/user/${userId}`, {
+            headers: {
+                Authorization: token
+            }
+        })
+        return response.status == 204
+    } catch (err) {
+        const response = err.response
+        if (response.status == 400)
+            throw Error(`UserId ou username em falta!`)
+        if (response.status == 401)
+            throw Error(`Não foi autorizado!`)
+        throw Error(`Erro ao fazer conexão.`)
+    }
+}
+
+module.exports = { createAccount, fetchAccount, updateAccount, deleteAccount }

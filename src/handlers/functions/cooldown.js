@@ -6,25 +6,17 @@ class CooldownHandler {
         this.client = client
     }
 
-    #COOLDOWN = new Map()
-
     load() {
-        this.client.addCooldown = this.addCooldown
-    }
-
-    /**
-    * @param {String} userId
-    * @param {number} delay
-    * @param {Boolean}
-    */
-    addCooldown(userId, delay) {
-        if (this.#COOLDOWN.has(userId))
-            if (Date.now() < this.#COOLDOWN.get(userId))
-                return false
-        const date = new Date()
-        date.setSeconds(date.getSeconds() + delay)
-        this.#COOLDOWN.set(userId, date.getDate())
-        return true
+        const COOLDOWN = new Map()
+        this.client.addCooldown = function(userId, delay) {
+            if (COOLDOWN.has(userId))
+                if (Date.now() < COOLDOWN.get(userId))
+                    return false
+            const date = new Date()
+            date.setSeconds(date.getSeconds() + delay)
+            COOLDOWN.set(userId, date.getTime())
+            return true
+        }
     }
 
 }

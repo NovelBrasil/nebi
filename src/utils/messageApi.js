@@ -8,7 +8,7 @@ const { default: axios } = require(`axios`)
 const createMessage = async (member, instance) => {
     const userId = member.id
     try {
-        const response = await instance.post(`/${userId}`)
+        const response = await instance.post(`/${userId}`, {})
         return response.status == 201
     } catch (err) {
         const response = err.response
@@ -28,7 +28,7 @@ const createMessage = async (member, instance) => {
 const putMessage = async (member, instance) => {
     const userId = member.id
     try {
-        const response = await instance.put(`/${userId}`)
+        const response = await instance.put(`/${userId}`, {})
         return response.status == 204
     } catch (err) {
         const response = err.response
@@ -70,8 +70,9 @@ const addMessage = async (member, token) => {
         const client = axios.create({
             baseURL: `${process.env.NEBI_API_URL}/messages`,
             headers: {
-                Authorization: token
-            }
+                Authorization: token,
+                "Content-Type": `application/json`
+            },
         })
 
         const get = await getMessage(member, client)
@@ -79,7 +80,34 @@ const addMessage = async (member, token) => {
             await createMessage(member, client)
         } else await putMessage(member, client)
 
-    } catch (err) { /* empty */ }
+    } catch (err) {
+        console.log(err)
+    }
 }
 
-module.exports = { addMessage, getMessage }
+/**
+ * @param {import("discord.js").GuildMember} member
+ * @param {String} token
+ * @returns {Promise<Boolean>}
+*/
+const deleteMessage = async (member, token) => {
+    const userId = member.id
+    try {
+        const response = await axios.delete(`${process.env.NEBI_API_URL}/messages/${userId}`, {
+            headers: {
+                Authorization: token
+            }
+        })
+        return response.status == 204
+    } catch (err) {
+        const response = err.response
+        console.log(err)
+        if (response.status == 400)
+            throw Error(`UserId ou username em falta!`)
+        if (response.status == 401)
+            throw Error(`Não foi autorizado!`)
+        throw Error(`Erro ao fazer conexão.`)
+    }
+}
+
+module.exports = { addMessage, getMessage, deleteMessage }
