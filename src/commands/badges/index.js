@@ -11,7 +11,7 @@ module.exports = {
         .addSubcommand((subcommand) =>
             subcommand
                 .setName(`habilitar`)
-                .setDescription(`Crie seu profile sem necessitar dos requisitos.`)
+                .setDescription(`Habilite uma medalha sua.`)
                 .addStringOption((option) =>
                     option
                         .setName(`id`)
@@ -22,7 +22,7 @@ module.exports = {
         .addSubcommand((subcommand) =>
             subcommand
                 .setName(`desabilitar`)
-                .setDescription(`Crie seu profile sem necessitar dos requisitos.`)
+                .setDescription(`Desabilite uma medalha sua.`)
                 .addStringOption((option) =>
                     option
                         .setName(`id`)
@@ -51,39 +51,13 @@ module.exports = {
         switch (subcommand.name) {
         case `habilitar`:
             if (chooseBadge.enabled) return await interaction.reply({ content: `Essa medalha já está habilitada!`, ephemeral: true })
-            delete account.badges[account.badges.indexOf(chooseBadge)]
-            chooseBadge.enabled = true
-            account.badges.push(chooseBadge)
-            account.badges.sort((a, b) => {
-                const nameA = a.name.toUpperCase()
-                const nameB = b.name.toUpperCase()
-                if (nameA < nameB) {
-                    return -1
-                }
-                if (nameA > nameB) {
-                    return 1
-                }
-                return 0
-            })
-            await updateAccount(member, { badges: account.badges }, token)
+            account.badges.at(account.badges.indexOf(chooseBadge)).enabled = true
+            await updateAccount(member, { badges: account.badges.sort() }, token)
             return await interaction.reply({ content: `Você habilitou a medalha ${chooseBadge.name}!`, ephemeral: true })
         case `desabilitar`:
             if (!chooseBadge.enabled) return await interaction.reply({ content: `Essa medalha já está desabilitada!`, ephemeral: true })
-            delete account.badges[account.badges.indexOf(chooseBadge)]
-            chooseBadge.enabled = false
-            account.badges.push(chooseBadge)
-            account.badges.sort((a, b) => {
-                const nameA = a.name.toUpperCase()
-                const nameB = b.name.toUpperCase()
-                if (nameA < nameB) {
-                    return -1
-                }
-                if (nameA > nameB) {
-                    return 1
-                }
-                return 0
-            })
-            await updateAccount(member, { badges: account.badges }, token)
+            account.badges.at(account.badges.indexOf(chooseBadge)).enabled = false
+            await updateAccount(member, { badges: account.badges.sort() }, token)
             return await interaction.reply({ content: `Você desabilitou a medalha ${chooseBadge.name}!`, ephemeral: true })
         }
     },

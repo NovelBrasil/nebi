@@ -33,16 +33,18 @@ module.exports = {
         const subcommand = options.data[0]
 
         const account = await fetchAccount(member, token)
-        if (!account.flag == flagCode) return await interaction.reply({ content: `Trocar a para atual? Isso não é possível.`, ephemeral: true })
+        if (account.flag == flagCode) 
+            return await interaction.reply({ content: `Trocar a para atual? Isso não é possível.`, ephemeral: true })
 
         const flags = interaction.client.config.flags.getFlags()
         const searchFlag = flags.get(flagCode)
-        if (!searchFlag) return await interaction.reply({ content: `Esse código não existe!`, ephemeral: true })
+        if (!searchFlag) 
+            return await interaction.reply({ content: `Esse código não existe!`, ephemeral: true })
 
         switch (subcommand.name) {
         case `trocar`:
             await updateAccount(member, { flag: flagCode }, token)
-            return await interaction.reply({ content: `Você habilitou a medalha ${searchFlag}!`, ephemeral: true })
+            return await interaction.reply({ content: `Você habilitou a bandeira ${searchFlag}!`, ephemeral: true })
         }
     },
 }
