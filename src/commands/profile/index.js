@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require(`discord.js`)
 const { createCard } = require(`./card`)
 const { AttachmentBuilder } = require(`discord.js`)
-const { createAccount, fetchAccount } = require(`./account`)
+const { createAccount, fetchAccount } = require(`../../utils/account`)
 const { openMenu } = require(`./badges`)
 const { openMenuFlag } = require(`./flags`)
 

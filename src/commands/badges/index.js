@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 const { SlashCommandBuilder } = require(`discord.js`)
-const { fetchAccount, updateAccount } = require(`../profile/account`)
+const { fetchAccount, updateAccount } = require(`../../utils/account`)
 
 module.exports = {
     data: new SlashCommandBuilder()

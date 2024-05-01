@@ -20,7 +20,7 @@ const createAccount = async (member, token) => {
     } catch (err) {
         const response = err.response
         if (response.status == 400)
-            throw Error(`UserId ou username em falta!`)
+            throw Error(`${response.data.message}`)
         if (response.status == 401)
             throw Error(`Não foi autorizado!`)
         throw Error(`Erro ao fazer conexão.`)
