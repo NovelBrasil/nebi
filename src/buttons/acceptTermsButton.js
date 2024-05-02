@@ -14,12 +14,14 @@ module.exports = {
         */
         const form_manager = client.formManager
         const userId = interaction.user.id
-        form_manager.add(userId, 
-            { 
-                id: `age`, response: `2`, category: `data`
-            }
-        )
-        form_manager.send(userId)
+        await interaction.deferUpdate()
+        try {
+            await form_manager.start(interaction)
+        } catch (error) {
+            form_manager.delete(userId)
+            if (error.message) return await interaction.user.send({ content: error.message })
+            else return await interaction.user.send({ content: `Você não respondeu o questionário a tempo.` })
+        }
     },
 }
   
