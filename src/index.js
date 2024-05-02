@@ -3,6 +3,7 @@ const chalk = require(`chalk`)
 const fs = require(`fs`)
 const DiscordConfig = require(`./config/bot`)
 const EmojiConfig = require(`./config/emojis`)
+const FormManager = require(`./manager/form-manager`)
 require(`dotenv`).config(`./.env`)
 
 // const fs = require('fs')
@@ -72,6 +73,8 @@ fs.readdirSync(`./src/handlers`).forEach((dir) => {
         client.handlers.set(handler.replace(`.js`, ``), HandlerInstance)
     })
 })
+
+client.formManager = new FormManager(client)
 
 client.login(token)
 
