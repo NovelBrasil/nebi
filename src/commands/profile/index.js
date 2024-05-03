@@ -1,7 +1,9 @@
 const { SlashCommandBuilder } = require(`discord.js`)
 const { createCard } = require(`./card`)
 const { AttachmentBuilder } = require(`discord.js`)
-const { createAccount } = require(`./account`)
+const { createAccount, fetchAccount } = require(`./account`)
+const { openMenu } = require(`./badges`)
+const { openMenuFlag } = require(`./flags`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,6 +21,22 @@ module.exports = {
             sub.setName(`criar`)
                 .setDescription(`Crie um profile para si.`)
         )
+        .addSubcommand(sub =>
+            sub.setName(`carteira`)
+                .setDescription(`Veja o quanto há na sua carteira.`)
+        )
+        .addSubcommand(sub =>
+            sub.setName(`medalhas`)
+                .setDescription(`Veja sobre as medalhas.`)
+        )
+        .addSubcommand(sub =>
+            sub.setName(`bandeiras`)
+                .setDescription(`Veja sobre as bandeiras.`)
+        )
+        .addSubcommand(sub =>
+            sub.setName(`fundos`)
+                .setDescription(`Veja sobre os planos de fundo.`)
+        )
     ,
 
     /** 
@@ -32,18 +50,35 @@ module.exports = {
         const u = options.getUser(`user`) || user
         const member = await client.guilds.cache.map(async g => await g.members.fetch({ user: u })).at(0)
         if (!member) return
+        await interaction.deferReply()
+
+        if (subcommand.name == `criar`) {
+            const response = await createAccount(member, token)
+            return await interaction.followUp(response)
+        }
+
+        const account = await fetchAccount(member, token)
 
         if (subcommand.name == `ver`) {
-            await interaction.deferReply()
-            const card = await createCard(member, token)
+            const card = await createCard(member, token, account)
             const attachment = new AttachmentBuilder(card, { name: `profile.png` })
             return await interaction.followUp({ files: [attachment] })
         }
 
-        if (subcommand.name == `criar`) {
-            await interaction.deferReply()
-            const response = await createAccount(member, token)
-            return await interaction.followUp(response)
+        if (subcommand.name == `carteira`) {
+            return await interaction.followUp({ content: `Seu saldo é: \`${account.balance.glows}\` ${account.balance.glows == 1 ? `glow` : `glows`}` })
+        }
+
+        if (subcommand.name == `medalhas`) {
+            return await openMenu(interaction, account.badges)
+        }
+
+        if (subcommand.name == `bandeiras`) {
+            return await openMenuFlag(interaction)
+        }
+
+        if (subcommand.name == `fundos`) {
+            return await interaction.followUp(`Em desenvolvimento.`)
         }
     },
 }

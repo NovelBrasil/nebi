@@ -2,8 +2,10 @@ const { Client, Partials, GatewayIntentBits, Collection } = require(`discord.js`
 const chalk = require(`chalk`)
 const fs = require(`fs`)
 const DiscordConfig = require(`./config/bot`)
-const EmojiConfig = require(`./config/emojis`)
+
+// const EmojiConfig = require(`./config/emojis`)
 const FormManager = require(`./manager/form-manager`)
+const FlagsConfig = require(`./config/flags`)
 require(`dotenv`).config(`./.env`)
 
 // const fs = require('fs')
@@ -54,9 +56,9 @@ const config = new DiscordConfig()
 config.setDevMode(true)
 client.config = config
 
-// Emoji
-const emoji = new EmojiConfig(client)
-client.config.emoji = emoji
+const flags = new FlagsConfig()
+flags.load()
+client.config.flags = flags
 
 const token = config.isDevMode() ? process.env.DISCORD_TEST_TOKEN : process.env.DISCORD_MAIN_TOKEN
 
@@ -65,7 +67,7 @@ client.buttons = new Collection()
 client.handlers = new Collection()
 
 // Load handlers
-fs.readdirSync(`./src/handlers`).forEach((dir) => {
+fs.readdirSync(`./src/handlers`).reverse().forEach((dir) => {
     fs.readdirSync(`./src/handlers/${dir}`).forEach(async (handler) => {
         const Handler = require(`./handlers/${dir}/${handler}`)
         const HandlerInstance = new Handler(client)
