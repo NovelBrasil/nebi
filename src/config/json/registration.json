@@ -9,62 +9,6 @@
       "description": "(Considere que cada uma dura uns 50 minutos)",
       "type": "writer"
     },
-    "server": {
-      "question": "Como conheceu o servidor?",
-      "type": "select",
-      "options": [
-        {
-          "label": "Por um parceiro (Novel Mania, Kiniga, Vulcan, SlimeRead, Saikai)",
-          "value": "knowServer-partner"
-        },
-        {
-          "label": "Pelo nosso canal no Youtube",
-          "value": "knowServer-youtube"
-        },
-        {
-          "label": "Pelo nosso Instagram",
-          "value": "knowServer-instagram"
-        },
-        {
-          "label": "Pelo nosso site",
-          "value": "knowServer-site"
-        },
-        {
-          "label": "Indicação de amigo",
-          "value": "knowServer-friend"
-        },
-        {
-          "label": "Nenhuma das opções",
-          "value": "knowServer-none"
-        }
-      ]
-    },
-    "site": {
-      "question": "Posta em algum site de novel?",
-      "type": "select",
-      "options": [
-        {
-          "label": "Novel Mania",
-          "value": "anySite-novelmania"
-        },
-        {
-          "label": "Kiniga",
-          "value": "anySite-kiniga"
-        },
-        {
-          "label": "Vulcan",
-          "value": "anySite-vulcan"
-        },
-        {
-          "label": "Outro site",
-          "value": "anySite-other"
-        },
-        {
-          "label": "Ainda não postei",
-          "value": "anySite-none"
-        }
-      ]
-    },
     "tutorando": {
       "question": "Deseja ser Tutorando+?",
       "description": "Com apenas R$5, você pode se tornar um Tutorando+ dentro da Novel Brasil. Tutorando+ é só uma forma de ajudar o servidor a fazer mais eventos, mais divulgação, novos membros, para a melhora do ambiente do server. \n\nAlém de ajudar o servidor, com essa assinatura mensal você pode garantir os seguintes bônus: \n\n> O tutorando+ tem uma aula extra por semana! Você pode pedir mais uma aula para o seu tutor, basta marcar com ele; \n> Cadeira em roteirismo dentro do currículo em todas as Classes (apesar de tocarmos levemente no assunto \"roteiro\" no currículo comum, não tem a mesma profundidade da cadeira liberada para o tutorando+); \n> Você terá aulões sobre quaisquer assuntos que desejar. \n\n**Deseja ser um tutorando+?**",

@@ -2,6 +2,7 @@
 const { ButtonBuilder } = require(`discord.js`)
 const config = require(`../config/json/registration.json`)
 const { Collection, ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder, ButtonStyle } = require(`discord.js`)
+const { getData } = require(`../commands/info/dataApi`)
 
 module.exports = class FormManager {
 
@@ -35,20 +36,100 @@ module.exports = class FormManager {
     }
 
     /**
-     * @param {String} userId
+     * @param {import("discord.js").ButtonInteraction} interaction
     */
-    send(userId) {
+    async send(interaction) {
+        const token = this.client.tokenApi
+        const form_forum_id = getData(`forum`, token)
+        const guildId = this.client.client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
+        const clientId = this.client.config.isDevMode() ? process.env.DISCORD_TEST_ID : process.env.DISCORD_MAIN_ID
+        const guild = this.client.guilds.cache.find(f => f.id === guildId)
+        const forum_channel = await guild.channels.fetch(form_forum_id)
+        if (forum_channel == undefined) {
+            throw Error(`Forum Channel is undefined!`)
+        }
+        const purple_color = this.client.config.getColor(`form`)
+        const user = await guild.members.fetch({ user: interaction.user, force: true })
+        if (user == undefined) throw Error(`User is undefined!`)
+
+        const default_tag = [
+            forum_channel.availableTags.find((r) => r.name === `Aberto`).id
+        ]
+
+        const userId = interaction.user.id
+        const tutorando_plus = this.#FORM.get(userId).get(`tutorando|data`) === `yes`
+        if (tutorando_plus)
+            default_tag.push(forum_channel.availableTags.find((r) => r.name === `Tutorando+`).id)
+
+        const essential_embeds = [
+            new EmbedBuilder()
+                .setColor(purple_color)
+                .setTitle(`Dados do Tutorando`)
+                .setDescription(
+                    `**User ID**: ${userId}
+                    **Idade**: ${this.#getResponseById(userId, `age`)}
+                    **Melhores horários**: ${this.#getResponseById(userId, `hour`)}
+                    **Tutorando+**: ${this.#getResponseById(userId, `tutorando`)}`
+                ),
+            new EmbedBuilder().setColor(purple_color).setTitle(`Perguntas Essenciais`)
+        ]
+        const essential_ids = [`inspiration`, `writing`, `message`, `public`, `objective`]
+
+        const knowledge_embeds = []
+
+        let question_num = 1
         for (const [key, value] of this.#FORM.get(userId)) {
             const key_splited = key.split(`|`)
             const id = key_splited.at(0)
             const category = key_splited.at(1)
+            if (category === `data`) continue
             const data = config[category][id]
             const question = data.question
             const response = data.type === `select` ? data.options.find(f => f.value === value) : value
-            console.log(`Question: ${question}`)
-            console.log(`Response: ${response}`)
+            const embed = new EmbedBuilder()
+                .setColor(purple_color)
+                .setTitle(`${question_num} - ${question}`)
+                .setDescription(
+                    `> ${response}`
+                )
+            if (essential_ids.includes(id))
+                essential_embeds.push(embed)
+            knowledge_embeds.push(embed)
+
+            question_num++
         }
-        this.#FORM.delete(userId)
+
+        const thread = await forum_channel.threads.create({
+            name: `${interaction.user.username}`,
+            message: {
+                content: `<@!${interaction.user.id}>`,
+                embeds: essential_embeds,
+            },
+            appliedTags: default_tag,
+        })
+
+        const msg_URL = thread.messages.cache
+            .filter((msg) => msg.author.id === clientId)
+            .map((msg) => msg.url)
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId(`formAccept`)
+                .setEmoji({ id: `1051884168977584139`, name: `ready` })
+                .setLabel(`Aprovar`)
+                .setStyle(ButtonStyle.Success),
+            new ButtonBuilder()
+                .setURL(`${msg_URL.at(0)}`)
+                .setLabel(`⬆ Clique para ir ao topo!`)
+                .setStyle(ButtonStyle.Link)
+        )
+
+        await thread.send({
+            embeds: [knowledge_embeds],
+            components: [row]
+        })
+
+        this.#FORM.delete(interaction.user.id)
     }
 
     /**
@@ -65,7 +146,7 @@ module.exports = class FormManager {
                 this.add(interaction.user.id, { category, id, response })
             }
         }
-        this.send(interaction.user.id)
+        await this.send(interaction.user.id)
     }
 
     // PRIVATE METHODS
@@ -153,5 +234,15 @@ module.exports = class FormManager {
             : await channel.awaitMessageComponent({ filter, time: 600_000, errors: [`time`] })
         
         return result
+    }
+
+    /**
+     * @param {String} userId 
+     * @param {String} id
+     * @returns {String}
+    */
+    #getResponseById(userId, id) {
+        if (!this.#FORM.has(userId)) return null
+        return this.#FORM.get(userId).find((_, k) => k.split(`-`)[0] === id)
     }
 }

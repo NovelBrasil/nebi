@@ -16,11 +16,10 @@ module.exports = async (client) => {
     client.config.emoji = emoji
 
     const token = client.tokenApi
-    const guildId = client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
-    const guild = client.guilds.cache.find(f => f.id == guildId)
-
-    const signHandler = client.handlers.get(`sign`)
-    await signHandler.setTopic(token, guild)
+    // const guildId = client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
+    // const guild = client.guilds.cache.find(f => f.id == guildId)
+    // const signHandler = client.handlers.get(`sign`)
+    // await signHandler.setTopic(token, guild)
 
     const randomPresence = activities[Math.floor(Math.random() * activities.length)]
     client.user.setPresence({ activities: [randomPresence], status: `online` })
