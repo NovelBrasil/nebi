@@ -40,7 +40,7 @@ const updateStudentTutor = async (userId, data, token) => {
  * @param {String} userId
  * @param {{ tutor: String }} data
  * @param {String} token
- * @returns {Promise<boolean>}
+ * @returns {Promise<{ id: String, name: String, tutor: String }>}
 */
 const existStudent = async (userId, token) => {
     try {
@@ -51,6 +51,7 @@ const existStudent = async (userId, token) => {
         })
         return response.data.result
     } catch (err) {
+        console.log(err)
         throw Error(`Erro ao fazer conexão.`)
     }
 }
