@@ -30,6 +30,14 @@ module.exports = class FormManager {
 
     /**
      * @param {String} userId
+     * @returns {Boolean}
+    */
+    has(userId) {
+        return this.#FORM.has(userId)
+    }
+
+    /**
+     * @param {String} userId
     */
     delete(userId) {
         this.#FORM.delete(userId)
@@ -40,8 +48,8 @@ module.exports = class FormManager {
     */
     async send(interaction) {
         const token = this.client.tokenApi
-        const form_forum_id = getData(`forum`, token)
-        const guildId = this.client.client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
+        const form_forum_id = await getData(`forum`, token)
+        const guildId = this.client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
         const clientId = this.client.config.isDevMode() ? process.env.DISCORD_TEST_ID : process.env.DISCORD_MAIN_ID
         const guild = this.client.guilds.cache.find(f => f.id === guildId)
         const forum_channel = await guild.channels.fetch(form_forum_id)
@@ -75,9 +83,8 @@ module.exports = class FormManager {
         ]
         const essential_ids = [`inspiration`, `writing`, `message`, `public`, `objective`]
 
-        const knowledge_embeds = []
+        const knowledge_ids = []
 
-        let question_num = 1
         for (const [key, value] of this.#FORM.get(userId)) {
             const key_splited = key.split(`|`)
             const id = key_splited.at(0)
@@ -88,15 +95,13 @@ module.exports = class FormManager {
             const response = data.type === `select` ? data.options.find(f => f.value === value) : value
             const embed = new EmbedBuilder()
                 .setColor(purple_color)
-                .setTitle(`${question_num} - ${question}`)
+                .setTitle(`${question}`)
                 .setDescription(
                     `> ${response}`
                 )
             if (essential_ids.includes(id))
                 essential_embeds.push(embed)
-            knowledge_embeds.push(embed)
-
-            question_num++
+            knowledge_ids.push(id)
         }
 
         const thread = await forum_channel.threads.create({
@@ -124,10 +129,22 @@ module.exports = class FormManager {
                 .setStyle(ButtonStyle.Link)
         )
 
-        await thread.send({
-            embeds: [knowledge_embeds],
-            components: [row]
-        })
+        for (let index = 0; index < knowledge_ids.length; index++) {
+            const id = knowledge_ids[index]
+            const data = config[`knowledge`][id]
+            const question = data.question
+            const response = this.#getResponseById(userId, id)
+            const embed = new EmbedBuilder()
+                .setColor(purple_color)
+                .setTitle(`${index+1}. ${question}`)
+                .setDescription(
+                    `> ${response}`
+                )
+            await thread.send({
+                embeds: [embed],
+                components: index === (knowledge_ids.length - 1) ? [row] : []
+            })
+        }
 
         this.#FORM.delete(interaction.user.id)
     }
@@ -144,9 +161,10 @@ module.exports = class FormManager {
             for (const id of Object.keys(id_map)) {
                 const response = await this.#sendQuestion(interaction, { category, id, text: title })
                 this.add(interaction.user.id, { category, id, response })
+                console.log(this.#getResponseById(interaction.user.id, id))
             }
         }
-        await this.send(interaction.user.id)
+        await this.send(interaction)
     }
 
     // PRIVATE METHODS
@@ -243,6 +261,6 @@ module.exports = class FormManager {
     */
     #getResponseById(userId, id) {
         if (!this.#FORM.has(userId)) return null
-        return this.#FORM.get(userId).find((_, k) => k.split(`-`)[0] === id)
+        return this.#FORM.get(userId).find((_, k) => k.split(`|`)[0] === id)
     }
 }
