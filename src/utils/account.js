@@ -20,7 +20,7 @@ const createAccount = async (member, token) => {
     } catch (err) {
         const response = err.response
         if (response.status == 400)
-            throw Error(`UserId ou username em falta!`)
+            throw Error(`${response.data.message}`)
         if (response.status == 401)
             throw Error(`Não foi autorizado!`)
         throw Error(`Erro ao fazer conexão.`)
@@ -66,5 +66,56 @@ const fetchAccount = async (member, token) => {
     }
 }
 
+/**
+ * @param {import("discord.js").GuildMember} member
+ * @param {{ username: String, aboutMe: String, background: String, flag: String, glows: Number, level: Number, xp: Number, badges: { enabled: boolean, name: string }[] }} account
+ * @param {String} token
+ * @returns {Promise<String>}
+*/
+const updateAccount = async (member, account, token) => {
+    const userId = member.id
+    try {
+        const response = await axios.put(`${process.env.NEBI_API_URL}/user/${userId}`, account, {
+            headers: {
+                Authorization: token
+            }
+        })
+        if (response.status == 200) {
+            return response.data.message
+        }
+    } catch (err) {
+        const response = err.response
+        console.log(response)
+        if (response.status == 400)
+            throw Error(`UserId ou username em falta!`)
+        if (response.status == 401)
+            throw Error(`Não foi autorizado!`)
+        throw Error(`Erro ao fazer conexão.`)
+    }
+}
 
-module.exports = { createAccount, fetchAccount }
+/**
+ * @param {import("discord.js").GuildMember} member
+ * @param {String} token
+ * @returns {Promise<Boolean>}
+*/
+const deleteAccount = async (member, token) => {
+    const userId = member.id
+    try {
+        const response = await axios.delete(`${process.env.NEBI_API_URL}/user/${userId}`, {
+            headers: {
+                Authorization: token
+            }
+        })
+        return response.status == 204
+    } catch (err) {
+        const response = err.response
+        if (response.status == 400)
+            throw Error(`UserId ou username em falta!`)
+        if (response.status == 401)
+            throw Error(`Não foi autorizado!`)
+        throw Error(`Erro ao fazer conexão.`)
+    }
+}
+
+module.exports = { createAccount, fetchAccount, updateAccount, deleteAccount }
