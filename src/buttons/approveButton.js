@@ -20,6 +20,10 @@ module.exports = {
         if (studentId == undefined) return
         const studentRole = guild.roles.cache.find((role) => role.id == studentId)
 
+        const classFId = await getData(`classeF`, token)
+        if (classFId == undefined) throw Error(`Não foi possível encontrar o id da classe F.`)
+        const classFRole = guild.roles.cache.find((role) => role.id == classFId)
+
         const target = guild.members.cache.find(
             (member) => member.user.username == channel.name
         )
@@ -29,6 +33,8 @@ module.exports = {
 
         const has = await existStudent(target.user.id, token)
         if (has) return await interaction.reply({ content: `Esse usuário já faz parte da tutoria.`, ephemeral: true })
+
+        await interaction.deferReply()
 
         const tutores = (await getTutors(token)).map(tutor => {
             return {
@@ -44,7 +50,7 @@ module.exports = {
                 .addOptions(tutores)
         )
 
-        const message = await interaction.reply({ content: `Qual será o tutor de <@${target.id}>?`, components: [row] })
+        const message = await interaction.followUp({ content: `Qual será o tutor de <@${target.id}>?`, components: [row] })
         const filter = (interaction) => interaction.customId === `select-tutor`
         try {
             const result = await message.awaitMessageComponent({ filter, time: 600_000, errors: [`time`] })
@@ -57,8 +63,13 @@ module.exports = {
             if (roleId && !target.roles.cache.has(roleId))
                 await target.roles.add(roleId)
 
+            if (!target.roles.cache.has(classFId))
+                await target.roles.add(classFRole)
+
             if (!target.roles.cache.has(studentId))
                 await target.roles.add(studentRole)
+
+            await message.channel.send(`${target.nickname} foi aprovado com sucesso.`)
         } catch (error) {
             await message.delete()
         }

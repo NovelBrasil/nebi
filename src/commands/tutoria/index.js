@@ -67,14 +67,24 @@ module.exports = {
         let roleId = undefined
 
         const studentId = await getData(`student`, token)
-        if (studentId == undefined) return
+        if (studentId == undefined) throw Error(`Não foi possível encontrar o id de tutorando.`)
         const studentRole = guild.roles.cache.find((role) => role.id == studentId)
+
+        const classFId = await getData(`classeF`, token)
+        if (classFId == undefined) throw Error(`Não foi possível encontrar o id da classe F.`)
+        const classFRole = guild.roles.cache.find((role) => role.id == classFId)
+
+        const noClassId = await getData(`noClass`, token)
+        if (noClassId == undefined) throw Error(`Não foi possível encontrar o id da classe ?.`)
+        const noClassRole = guild.roles.cache.find((role) => role.id == noClassId)
+
+        await interaction.deferReply()
 
         if (subcommand.name == `adicionar`) {
             const tutorUser = options.getUser(`tutor`)
             if (tutorUser) {
                 const tutorData = await getTutor(tutorUser.id, token)
-                if (!tutorData.tutor) return await interaction.reply(`O tutor \`${tutorUser.username}\` não está registrado.`)
+                if (!tutorData.tutor) return await interaction.followUp(`O tutor \`${tutorUser.username}\` não está registrado.`)
                 Tutor = tutorData.tutor
                 roleId = tutorData.roleId
             }
@@ -82,6 +92,15 @@ module.exports = {
                 await member.roles.add(roleId)
             if (!member.roles.cache.has(studentId))
                 await member.roles.add(studentRole)
+
+            for (const role of member.roles.cache.values()) {
+                if (role.name.includes(`Classe`) && !role.name.includes(`F`)) {
+                    await member.roles.remove(role)
+                }
+            }
+
+            if (!member.roles.cache.has(classFId))
+                await member.roles.add(classFRole)
 
             /* ADD PLANILHA */
             if (has) {
@@ -92,11 +111,11 @@ module.exports = {
                 if (member.roles.cache.has(tutorData.roleId))
                     await member.roles.remove(tutorData.roleId)
             } else await addStudent(target.id, { AtualUsername: target.username, Nickname: member.nickname, Tutor }, token)
-            return await interaction.reply(`O \`${target.username}\` foi adicionado como tutorando de **${Tutor}**.`)
+            return await interaction.followUp(`O \`${target.username}\` foi adicionado como tutorando de **${Tutor}**.`)
         }
 
         if (subcommand.name == `alterar`) {
-            if (!has) return await interaction.reply(`O tutorando \`${target.username}\` não está registrado.`)
+            if (!has) return await interaction.followUp(`O tutorando \`${target.username}\` não está registrado.`)
 
             const old_tutor = has.tutor
             const tutorData = await getTutor(old_tutor, token)
@@ -106,7 +125,7 @@ module.exports = {
             const tutorUser = options.getUser(`tutor`)
             if (tutorUser) {
                 const tutorData = await getTutor(tutorUser.id, token)
-                if (!tutorData.tutor) return await interaction.reply(`O tutor \`${tutorUser.username}\` não está registrado.`)
+                if (!tutorData.tutor) return await interaction.followUp(`O tutor \`${tutorUser.username}\` não está registrado.`)
                 Tutor = tutorData.tutor
                 roleId = tutorData.roleId
             }
@@ -115,19 +134,29 @@ module.exports = {
                 await member.roles.add(roleId)
 
             await updateStudentTutor(target.id, { tutor: Tutor }, token)
-            return await interaction.reply(`O \`${target.username}\` foi alterado para **${Tutor}**.`)
+            return await interaction.followUp(`O \`${target.username}\` foi alterado para **${Tutor}**.`)
         }
 
         if (subcommand.name == `remover`) {
-            if (!has) return await interaction.reply(`O tutorando \`${target.username}\` não está registrado.`)
+            if (!has) return await interaction.followUp(`O tutorando \`${target.username}\` não está registrado.`)
 
             const old_tutor = has.tutor
             const tutorData = await getTutor(old_tutor, token)
             if (member.roles.cache.has(tutorData.roleId))
                 await member.roles.remove(tutorData.roleId)
 
+            for (const role of member.roles.cache.values()) {
+                if (role.name.includes(`Classe`) && !role.name.includes(`?`))
+                    await member.roles.remove(role)
+                else if (role.name.includes(`Tutorando`))
+                    await member.roles.remove(role)
+            }
+
+            if (!member.roles.cache.has(noClassId))
+                await member.roles.add(noClassRole)
+
             await updateStudentTutor(target.id, { tutor: `Inativo` }, token)
-            return await interaction.reply(`O \`${target.username}\` foi removido da tutoria.`)
+            return await interaction.followUp(`O \`${target.username}\` foi removido da tutoria.`)
         }
     },
 }
