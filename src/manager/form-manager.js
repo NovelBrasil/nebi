@@ -263,7 +263,7 @@ module.exports = class FormManager {
      * @returns {String}
     */
     #getResponseById(userId, id) {
-        if (!this.#FORM.has(userId)) return null
+        if (!this.#FORM.has(userId)) throw new Error(`O usuário nem iniciou a matrícula ou as respostas se perderam na cache.`)
         return this.#FORM.get(userId).find((_, k) => k.split(`|`)[0] === id)
     }
 }

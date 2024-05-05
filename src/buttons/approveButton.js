@@ -27,7 +27,7 @@ module.exports = {
         }
 
         const studentIfExist = await existStudent(target.user.id, token)
-        if (studentIfExist) return await interaction.reply({ content: `Esse usuário já faz parte da tutoria.`, ephemeral: true })
+        if (studentIfExist) return await interaction.reply({ content: `Esse usuário já fez parte da tutoria. Use o comando para o adicionar novamente.`, ephemeral: true })
 
         await interaction.deferReply()
 
