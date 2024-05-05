@@ -59,6 +59,8 @@ client.config.flags = flags
 
 const token = config.isDevMode() ? process.env.DISCORD_TEST_TOKEN : process.env.DISCORD_MAIN_TOKEN
 
+client.bot_id = config.isDevMode() ? process.env.DISCORD_TEST_ID : process.env.DISCORD_MAIN_ID
+
 client.commands = new Collection()
 client.handlers = new Collection()
 
