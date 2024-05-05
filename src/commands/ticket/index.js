@@ -1,6 +1,5 @@
 /* eslint-disable no-case-declarations */
-const { SlashCommandBuilder, StringSelectMenuBuilder, EmbedBuilder, PermissionFlagsBits, ActionRowBuilder } = require(`discord.js`)
-const ticket_values = require(`../../config/json/ticket.json`)
+const { SlashCommandBuilder, ButtonBuilder, EmbedBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonStyle } = require(`discord.js`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,11 +7,7 @@ module.exports = {
         .setDescription(`Gerenciar o embed do ticket.`)
         .addSubcommand(sub =>
             sub.setName(`criar`)
-                .setDescription(`Cria o embed no chat que já foi informado no banco de dados.`)
-        )
-        .addSubcommand(sub =>
-            sub.setName(`atualizar`)
-                .setDescription(`Atualiza o embed no chat que já foi informado no banco de dados.`)
+                .setDescription(`Cria o embed no chat que o comando for executado.`)
         )
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     ,
@@ -27,25 +22,20 @@ module.exports = {
 
         const embed = new EmbedBuilder()
         embed.setTitle(`Atendimento da Novel Brasil`)
-        embed.setDescription(`Boas-vindas à sala de atendimento da comunidade.\nPor aqui você pode reportar bugs, pedir suporte sobre pagamentos ou sobre outro assunto que esteja te deixando sem dormir.\n**Importante**\n> - Não abra tickets somente para testar, pois isso tomará o tempo da equipe.\n- Seu ticket será aberto numa thread privada, somente a equipe terá acesso. Não marque ninguém de fora sem autorização.\n\nSelecione uma das opções abaixo para iniciar o atendimento.`)
-        embed.setFooter()
+        embed.setDescription(`Boas-vindas à sala de atendimento da comunidade.\nPor aqui você pode reportar bugs, pedir suporte sobre pagamentos ou sobre outro assunto que esteja te deixando sem dormir.\n\n**Importante**\n> - Não abra tickets somente para testar, pois isso tomará o tempo da equipe.\n> - Seu ticket será aberto numa thread privada, somente a equipe terá acesso. Não marque ninguém de fora sem autorização.\n\nClique no botão abaixo para abrir um ticket.`)
+        embed.setTimestamp()
 
         const row = new ActionRowBuilder().addComponents(
-            new StringSelectMenuBuilder()
+            new ButtonBuilder()
                 .setCustomId(`ticket`)
-                .setPlaceholder(`Selecione uma das opções`)
-                .setOptions(ticket_values)
+                .setLabel(`Abrir Ticket`)
+                .setStyle(ButtonStyle.Success)
         )
 
         switch (subcommand.name) {
         case `criar`:
             await interaction.channel.send({ embeds: [embed], components: [row] })
             return await interaction.reply({ content: `O embed e o componente foram criados.`, ephemeral: true })
-        case `atualizar`:
-            const message = interaction.channel.messages.cache.find(f => f.author.id === client.bot_id)
-            if (!message) return await interaction.reply({ content: `Você precisa primeiro gerar a mensagem para então atualizar.`, ephemeral: true })
-            await message.edit({ embeds: [embed], components: [row] })
-            return await interaction.reply({ content: `O embed e o componente foram atualizados.`, ephemeral: true })
         }
     },
 }
