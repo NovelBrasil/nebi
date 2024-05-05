@@ -27,7 +27,7 @@ module.exports = {
 
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-                .setCustomId(`ticket`)
+                .setCustomId(`open-ticket`)
                 .setLabel(`Abrir Ticket`)
                 .setStyle(ButtonStyle.Success)
         )
