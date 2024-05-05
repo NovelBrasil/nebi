@@ -2,6 +2,8 @@ const { Client, Partials, GatewayIntentBits, Collection } = require(`discord.js`
 const chalk = require(`chalk`)
 const fs = require(`fs`)
 const DiscordConfig = require(`./config/bot`)
+
+// const EmojiConfig = require(`./config/emojis`)
 const FlagsConfig = require(`./config/flags`)
 require(`dotenv`).config(`./.env`)
 
@@ -57,9 +59,20 @@ const flags = new FlagsConfig()
 flags.load()
 client.config.flags = flags
 
-const token = config.isDevMode() ? process.env.DISCORD_TEST_TOKEN : process.env.DISCORD_MAIN_TOKEN
+const devMode = config.isDevMode()
+
+if (devMode) {
+    client.token = process.env.DISCORD_TEST_TOKEN
+    client.guild_id = process.env.DEV_SERVER_GUILD_ID
+    client.bot_id = process.env.DISCORD_TEST_ID
+} else {
+    client.token = process.env.DISCORD_MAIN_TOKEN
+    client.guild_id = process.env.PUBLIC_SERVER_GUILD_ID
+    client.bot_id = process.env.DISCORD_MAIN_ID
+}
 
 client.commands = new Collection()
+client.buttons = new Collection()
 client.handlers = new Collection()
 
 // Load handlers
@@ -72,7 +85,7 @@ fs.readdirSync(`./src/handlers`).reverse().forEach((dir) => {
     })
 })
 
-client.login(token)
+client.login(client.token)
 
 console.log(`\u001b[0m`)
 console.log(chalk.yellow(`© Novel Brasil | 2020 - ${new Date().getFullYear()}`))

@@ -1,4 +1,8 @@
-const { SlashCommandBuilder } = require(`discord.js`)
+const { SlashCommandBuilder, 
+    // ButtonStyle, 
+    // ActionRowBuilder, 
+    // ButtonBuilder 
+} = require(`discord.js`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,6 +16,13 @@ module.exports = {
      */
 
     run: async (client, interaction) => {
+        /*const cancel = new ButtonBuilder()
+            .setCustomId(`startForm`)
+            .setLabel(`Form Test`)
+            .setStyle(ButtonStyle.Secondary)
+
+        const row = new ActionRowBuilder()
+            .addComponents(cancel)*/
         await interaction.reply({ content: `Pong!`, fetchReply: true })
     },
 }
