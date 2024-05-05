@@ -21,6 +21,16 @@ module.exports = async (client) => {
     // const guild = client.guilds.cache.find(f => f.id == guildId)
     // const signHandler = client.handlers.get(`sign`)
     // await signHandler.setTopic(token, guild)
+    
+    const guildId = client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
+    const guild = client.guilds.cache.find(f => f.id == guildId)
+
+    try {
+        const signHandler = client.handlers.get(`sign`)
+        await signHandler.setTopic(token, guild)
+    } catch (error) {
+        console.error(error)
+    }
 
     const form_manager = new FormManager(client)
     try {

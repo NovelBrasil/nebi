@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require(`discord.js`)
 const { createCard } = require(`./card`)
 const { AttachmentBuilder } = require(`discord.js`)
-const { createAccount, fetchAccount } = require(`./account`)
+const { createAccount, fetchAccount } = require(`../../utils/account`)
 const { openMenu } = require(`./badges`)
 const { openMenuFlag } = require(`./flags`)
 
@@ -65,19 +65,14 @@ module.exports = {
             return await interaction.followUp({ files: [attachment] })
         }
 
-        if (subcommand.name == `carteira`) {
+        switch (subcommand.name) {
+        case `carteira`:
             return await interaction.followUp({ content: `Seu saldo é: \`${account.balance.glows}\` ${account.balance.glows == 1 ? `glow` : `glows`}` })
-        }
-
-        if (subcommand.name == `medalhas`) {
+        case `medalhas`:
             return await openMenu(interaction, account.badges)
-        }
-
-        if (subcommand.name == `bandeiras`) {
+        case `bandeiras`:
             return await openMenuFlag(interaction)
-        }
-
-        if (subcommand.name == `fundos`) {
+        default:
             return await interaction.followUp(`Em desenvolvimento.`)
         }
     },

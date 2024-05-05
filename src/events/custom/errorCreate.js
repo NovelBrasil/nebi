@@ -1,3 +1,5 @@
+const { EmbedBuilder } = require(`discord.js`)
+
 /**
  * @param {import("discord.js").Client} client
  * @param {String} err
@@ -33,6 +35,11 @@ module.exports = async (client, err, commandName, interaction, type) => {
                 }
             ]
         })
+        interaction.followUp({ embeds: [
+            new EmbedBuilder({
+                description: `${client.config.emoji.getEmoji(`error`)} | **${err.message}**`,
+            }).setColor(client.config.getColor(`error`))
+        ], ephemeral: true })
     }
     catch { /*empty*/ }
 }
