@@ -1,24 +1,20 @@
-const { EmbedBuilder } = require(`discord.js`)
-
 /**
  * @param {import("discord.js").Client} client
- * @param {String} err
  * @param {String} commandName
  * @param {import("discord.js").Interaction} interaction
- * @param {String} type
 */
-module.exports = async (client, err, commandName, interaction, type) => {
+module.exports = async (client, commandName, interaction) => {
     try {
         if (!interaction) return
         const author = interaction.user
         const thumbnail = author.displayAvatarURL({ extension: `png`, size: 128 })
-        client.sendLog(client, `error`, {
-            title: `💢・Erro`,
-            description: `Erro em algum ${type}.`,
+        client.sendLog(client, `success`, {
+            title: `🛠・Executado`,
+            description: `Botão executado.`,
             thumbnail,
             fields: [
                 {
-                    name: `> ${type}`,
+                    name: `> Botão`,
                     value: `- ${commandName}`
                 },
                 {
@@ -28,18 +24,9 @@ module.exports = async (client, err, commandName, interaction, type) => {
                 {
                     name: `> Executado em`,
                     value: `- ${interaction.channel} (${interaction.channel.name})`
-                },
-                {
-                    name: `> Erro:`,
-                    value: `\`\`\`${err.message.replace(/`/g, `'`)}\`\`\``.slice(0, 4096)
                 }
             ]
         })
-        interaction.followUp({ embeds: [
-            new EmbedBuilder({
-                description: `${client.config.emoji.getEmoji(`error`)} | **${err.message}**`,
-            }).setColor(client.config.getColor(`error`))
-        ], ephemeral: true })
     }
     catch { /*empty*/ }
 }

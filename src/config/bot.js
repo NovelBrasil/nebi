@@ -7,6 +7,7 @@ class DiscordConfig {
         this.#COLORS.set(`default`, `FF6432`)
         this.#COLORS.set(`error`, `FF3232`)
         this.#COLORS.set(`success`, `32FF38`)
+        this.#COLORS.set(`form`, `D000BA`)
     }
 
     setDevMode(bool) {

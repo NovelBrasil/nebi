@@ -32,7 +32,8 @@ module.exports = class TokenHandler {
             if (response.status == 201)
                 return response.data[`token`]
             else return response.data[`message`]
-        } catch {
+        } catch (err) {
+            console.error(err)
             return `Erro ao tentar criar conexão.`
         }
     }
@@ -52,6 +53,7 @@ module.exports = class TokenHandler {
                 return false
         } catch (err) {
             const response = err.response
+            console.error(err)
             if (response.status == 404)
                 return true
             if (response.data.code == `ERR_JWT_EXPIRED`)
