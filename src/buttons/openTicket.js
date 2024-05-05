@@ -1,4 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ChannelType, TextInputBuilder, TextInputStyle, ModalBuilder, ThreadAutoArchiveDuration } = require(`discord.js`)
+const { checkRole } = require(`../utils/discordUtils`)
 
 // eslint-disable-next-line no-unused-vars
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
     run: async (client, interaction) => {
         const { user } = interaction
 
-        await interaction.deferReply({ ephemeral: true })
+        const support_role = await checkRole(client, `support`)
 
         const modal = new ModalBuilder()
             .setCustomId(`ticket-modal`)
@@ -20,14 +21,16 @@ module.exports = {
         const title_input = new TextInputBuilder()
             .setCustomId(`titleInput`)
             .setLabel(`Qual o problema?`)
+            .setPlaceholder(`Exemplos: Encontrei um problema, desejo fazer um pagamento, etc.`)
             .setStyle(TextInputStyle.Short)
+            .setMaxLength(99)
         
         modal.addComponents(new ActionRowBuilder().addComponents(title_input))
 
         await interaction.showModal(modal)
 
         const filter = (interaction) => interaction.customId === `ticket-modal`
-        const modal_interaction = await interaction.awaitModalSubmit({ filter, time: 15_000, errors: [`time`] })
+        const modal_interaction = await interaction.awaitModalSubmit({ filter, time: 600_000, errors: [`time`] })
         const title = modal_interaction.fields.getTextInputValue(`titleInput`)
         const thread = await interaction.channel.threads.create({
             name: title,
@@ -46,10 +49,13 @@ module.exports = {
         embed.setTimestamp()
 
         const message = await thread.send({
-            content: `<@${user.id}> support_id`,
+            content: `<@${user.id}> <@&${support_role.id}>`,
             embeds: [embed]
         })
 
-        interaction.followUp(`Seu ticket foi aberto! (Clique aqui)[${message.url}] para ir até lá ou na thread que apareceu abaixo nesse chat.`)
+        await modal_interaction.reply({
+            content: `Seu ticket foi aberto! [Clique aqui](${message.url}) para ir até lá ou na thread que apareceu abaixo nesse chat.`,
+            ephemeral: true
+        })
     },
 }

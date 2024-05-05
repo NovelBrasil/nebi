@@ -30,6 +30,7 @@ module.exports = {
                 .setCustomId(`open-ticket`)
                 .setLabel(`Abrir Ticket`)
                 .setStyle(ButtonStyle.Success)
+                .setEmoji({ id: `1051884166276460604`, name: `send` })
         )
 
         switch (subcommand.name) {
