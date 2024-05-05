@@ -1,7 +1,7 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require(`discord.js`)
+const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require(`discord.js`)
 const { getTutor } = require(`./tutorApi`)
 const { addStudent, updateStudentTutor, existStudent } = require(`./studentApi`)
-const { getData } = require(`../info/dataApi`)
+const { checkRole } = require(`../../utils/discordUtils`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -46,7 +46,7 @@ module.exports = {
                         .setRequired(true)
                 )
         )
-        .setDefaultMemberPermissions(PermissionFlagsBits.CreatePrivateThreads)
+        .setDefaultMemberPermissions(PermissionFlagsBits.CreatePublicThreads)
     ,
 
     /** 
@@ -56,27 +56,19 @@ module.exports = {
 
     run: async (client, interaction) => {
         const token = client.tokenApi
-        const { options, guild } = interaction
+        const { options } = interaction
         const subcommand = options.data[0]
 
         const target = options.getUser(`tutorando`)
-        const has = await existStudent(target.id, token)
+        const studentIfExist = await existStudent(target.id, token)
         const member = await client.guilds.cache.map(async g => await g.members.fetch({ user: target })).at(0)
 
         let Tutor = `SemTutor`
         let roleId = undefined
 
-        const studentId = await getData(`student`, token)
-        if (studentId == undefined) throw Error(`Não foi possível encontrar o id de tutorando.`)
-        const studentRole = guild.roles.cache.find((role) => role.id == studentId)
-
-        const classFId = await getData(`classeF`, token)
-        if (classFId == undefined) throw Error(`Não foi possível encontrar o id da classe F.`)
-        const classFRole = guild.roles.cache.find((role) => role.id == classFId)
-
-        const noClassId = await getData(`noClass`, token)
-        if (noClassId == undefined) throw Error(`Não foi possível encontrar o id da classe ?.`)
-        const noClassRole = guild.roles.cache.find((role) => role.id == noClassId)
+        const studentRole = await checkRole(client, `student`)
+        const classFRole = await checkRole(client, `classeF`)
+        const noClassRole = await checkRole(client, `noClass`)
 
         await interaction.deferReply()
 
@@ -90,23 +82,56 @@ module.exports = {
             }
             if (roleId && !member.roles.cache.has(roleId))
                 await member.roles.add(roleId)
-            if (!member.roles.cache.has(studentId))
+            if (!member.roles.cache.has(studentRole.id))
                 await member.roles.add(studentRole)
 
+            let remove_all = true
+            if (member.roles.cache.some(role => role.name.includes(`Classe`) 
+                && !role.name.includes(`F`) && !role.name.includes(`?`))) {
+                const row = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setCustomId(`remove-yes`)
+                        .setEmoji({ id: `1051884168977584139`, name: `ready` })
+                        .setLabel(`Sim`)
+                        .setStyle(ButtonStyle.Success),
+                    new ButtonBuilder()
+                        .setCustomId(`remove-no`)
+                        .setEmoji({ id: `1051884167782219776`, name: `error` })
+                        .setLabel(`Não`)
+                        .setStyle(ButtonStyle.Danger)
+                )
+                const message = await interaction.channel.send({
+                    content: `Deseja remover todas as classes desse usuário?`,
+                    components: [row]
+                })
+                try {
+                    const filter = (interaction) => interaction.customId.split(`-`)[0] === `remove`
+                    const button = await message.awaitMessageComponent({ filter, time: 600_000, errors: [`time`] })
+                    await message.delete()
+                    const value = button.customId.split(`-`)[1]
+                    remove_all = value === `yes` ? true : false
+                } catch (err) {
+                    await message.delete()
+                }
+            }
+
             for (const role of member.roles.cache.values()) {
-                if (role.name.includes(`Classe`) && !role.name.includes(`F`)) {
+                if (remove_all) {
+                    if (role.name.includes(`Classe`) && !role.name.includes(`F`))
+                        await member.roles.remove(role)
+                } else if (role.name.includes(`Classe ?`)) {
                     await member.roles.remove(role)
                 }
             }
 
-            if (!member.roles.cache.has(classFId))
+            if (!member.roles.cache.has(classFRole.id))
                 await member.roles.add(classFRole)
 
             /* ADD PLANILHA */
-            if (has) {
+            if (studentIfExist) {
                 await updateStudentTutor(target.id, { tutor: Tutor }, token)
 
-                const old_tutor = has.tutor
+                const old_tutor = studentIfExist.tutor
                 const tutorData = await getTutor(old_tutor, token)
                 if (member.roles.cache.has(tutorData.roleId))
                     await member.roles.remove(tutorData.roleId)
@@ -115,9 +140,9 @@ module.exports = {
         }
 
         if (subcommand.name == `alterar`) {
-            if (!has) return await interaction.followUp(`O tutorando \`${target.username}\` não está registrado.`)
+            if (!studentIfExist) return await interaction.followUp(`O tutorando \`${target.username}\` não está registrado.`)
 
-            const old_tutor = has.tutor
+            const old_tutor = studentIfExist.tutor
             const tutorData = await getTutor(old_tutor, token)
             if (member.roles.cache.has(tutorData.roleId))
                 await member.roles.remove(tutorData.roleId)
@@ -138,9 +163,9 @@ module.exports = {
         }
 
         if (subcommand.name == `remover`) {
-            if (!has) return await interaction.followUp(`O tutorando \`${target.username}\` não está registrado.`)
+            if (!studentIfExist) return await interaction.followUp(`O tutorando \`${target.username}\` não está registrado.`)
 
-            const old_tutor = has.tutor
+            const old_tutor = studentIfExist.tutor
             const tutorData = await getTutor(old_tutor, token)
             if (member.roles.cache.has(tutorData.roleId))
                 await member.roles.remove(tutorData.roleId)
@@ -152,7 +177,7 @@ module.exports = {
                     await member.roles.remove(role)
             }
 
-            if (!member.roles.cache.has(noClassId))
+            if (!member.roles.cache.has(noClassRole.id))
                 await member.roles.add(noClassRole)
 
             await updateStudentTutor(target.id, { tutor: `Inativo` }, token)

@@ -63,6 +63,7 @@ const getData = async (key, token) => {
         return response.data.result.value
     } catch (err) {
         const response = err.response
+        console.error(err)
         if (response.status == 400)
             return undefined
         if (response.status == 401)

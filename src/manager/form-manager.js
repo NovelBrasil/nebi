@@ -18,9 +18,22 @@ module.exports = class FormManager {
         this.client = client
     }
 
+    async loadAsync() {
+        const token = this.client.tokenApi
+        this.form_forum_id = await getData(`forum`, token)
+
+        this.guild = this.client.guilds.cache.find(f => f.id === this.client.guild_id)
+        this.forum_channel = await this.guild.channels.fetch(this.form_forum_id)
+        if (this.forum_channel == undefined) {
+            throw Error(`Forum Channel is undefined!`)
+        }
+        this.tag_open_id = this.forum_channel.availableTags.find((r) => r.name === `Aberto`).id
+        this.tag_tutorando_plus_id = this.forum_channel.availableTags.find((r) => r.name === `Tutorando+`).id
+    }
+
     /** 
      * @param {String} userId
-     * @param {{ id, category, response }} data
+     * @param {{ id: String, category: String, response: String }} data
      */
     add(userId, data) {
         if (this.#FORM.has(userId))
@@ -47,27 +60,17 @@ module.exports = class FormManager {
      * @param {import("discord.js").ButtonInteraction} interaction
     */
     async send(interaction) {
-        const token = this.client.tokenApi
-        const form_forum_id = await getData(`forum`, token)
-        const guildId = this.client.config.isDevMode() ? process.env.DEV_SERVER_GUILD_ID : process.env.PUBLIC_SERVER_GUILD_ID
-        const clientId = this.client.config.isDevMode() ? process.env.DISCORD_TEST_ID : process.env.DISCORD_MAIN_ID
-        const guild = this.client.guilds.cache.find(f => f.id === guildId)
-        const forum_channel = await guild.channels.fetch(form_forum_id)
-        if (forum_channel == undefined) {
-            throw Error(`Forum Channel is undefined!`)
-        }
-        const purple_color = this.client.config.getColor(`form`)
-        const user = await guild.members.fetch({ user: interaction.user, force: true })
-        if (user == undefined) throw Error(`User is undefined!`)
+        const clientId = this.client.bot_id
 
-        const default_tag = [
-            forum_channel.availableTags.find((r) => r.name === `Aberto`).id
-        ]
+        const default_tag = [ this.tag_open_id ]
+        const purple_color = this.client.config.getColor(`form`)
+        const user = await this.guild.members.fetch({ user: interaction.user, force: true })
+        if (user == undefined) throw Error(`User is undefined!`)
 
         const userId = interaction.user.id
         const tutorando_plus = this.#FORM.get(userId).get(`tutorando|data`) === `yes`
         if (tutorando_plus)
-            default_tag.push(forum_channel.availableTags.find((r) => r.name === `Tutorando+`).id)
+            default_tag.push(this.tag_tutorando_plus_id)
 
         const essential_embeds = [
             new EmbedBuilder()
@@ -104,7 +107,7 @@ module.exports = class FormManager {
             knowledge_ids.push(id)
         }
 
-        const thread = await forum_channel.threads.create({
+        const thread = await this.forum_channel.threads.create({
             name: `${interaction.user.username}`,
             message: {
                 content: `<@!${interaction.user.id}>`,
@@ -161,7 +164,7 @@ module.exports = class FormManager {
             for (const id of Object.keys(id_map)) {
                 const response = await this.#sendQuestion(interaction, { category, id, text: title })
                 this.add(interaction.user.id, { category, id, response })
-                console.log(this.#getResponseById(interaction.user.id, id))
+                // console.log(this.#getResponseById(interaction.user.id, id))
             }
         }
         await this.send(interaction)
@@ -190,7 +193,7 @@ module.exports = class FormManager {
         case `writer`:
         {
             const message = await interaction.user.send({ embeds: [embed] })
-            const response = await this.#await(message.channel)
+            const response = await this.#awaitSomething(message.channel)
             return response.at(0).content
         } // Using keys to solve statement repetition problem
         case `button`:
@@ -208,7 +211,7 @@ module.exports = class FormManager {
                     .setStyle(ButtonStyle.Danger)
             )
             const message = await interaction.user.send({ embeds: [embed], components: [row] })
-            const response = await this.#await(message.channel, id, true)
+            const response = await this.#awaitSomething(message.channel, id, true)
             await response.update({ fetchReply: true })
             return response.customId.split(`-`)[1]
         } // Using keys to solve statement repetition problem
@@ -228,11 +231,11 @@ module.exports = class FormManager {
                     .setOptions(optionsWithEmoji)
             )
             const message = await interaction.user.send({ embeds: [embed], components: [row] })
-            const response = await this.#await(message.channel, id)
+            const response = await this.#awaitSomething(message.channel, id)
             await response.update({ fetchReply: true })
             return response.values.at(0)
         default:
-            throw Error(`O tipo não foi encontrado. Reporte isso para um membro da equipe de TI. Sentimentos muito pelo transtorno.`)
+            throw Error(`O tipo ${data.type} não foi encontrado. Reporte isso para um membro da equipe de TI. Sentimentos muito pelo transtorno.`)
         }
     }
 
@@ -241,7 +244,7 @@ module.exports = class FormManager {
      * @param {String?} customId
      * @param {boolean?} button
     */
-    async #await(channel, customId, button) {
+    async #awaitSomething(channel, customId, button) {
         if (!channel.isDMBased()) return
 
         const filter = !customId ? 
