@@ -71,6 +71,8 @@ if (devMode) {
     client.bot_id = process.env.DISCORD_MAIN_ID
 }
 
+client.bot_id = config.isDevMode() ? process.env.DISCORD_TEST_ID : process.env.DISCORD_MAIN_ID
+
 client.commands = new Collection()
 client.buttons = new Collection()
 client.handlers = new Collection()
