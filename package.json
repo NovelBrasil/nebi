@@ -5,13 +5,14 @@
   "main": "src/index.js",
   "scripts": {
     "test": "vitest",
-    "dev": "nodemon ."
+    "dev": "pnpm dlx nodemon .",
+    "lint": "biome format --write src/"
   },
   "keywords": [],
   "author": "KingTimer12",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^8.56.0",
+    "@biomejs/biome": "1.9.2",
     "vitest": "^1.1.1"
   },
   "dependencies": {

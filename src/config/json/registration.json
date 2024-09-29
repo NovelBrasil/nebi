@@ -1,104 +1,104 @@
 {
-  "data": {
-    "age": {
-      "question": "Qual sua idade?",
-      "type": "writer"
-    },
-    "hour": {
-      "question": "Quais são os melhores horários para você ter tutoria?",
-      "description": "(Considere que cada uma dura uns 50 minutos)",
-      "type": "writer"
-    },
-    "tutorando": {
-      "question": "Deseja ser Tutorando+?",
-      "description": "Com apenas R$5, você pode se tornar um Tutorando+ dentro da Novel Brasil. Tutorando+ é só uma forma de ajudar o servidor a fazer mais eventos, mais divulgação, novos membros, para a melhora do ambiente do server. \n\nAlém de ajudar o servidor, com essa assinatura mensal você pode garantir os seguintes bônus: \n\n> O tutorando+ tem uma aula extra por semana! Você pode pedir mais uma aula para o seu tutor, basta marcar com ele; \n> Cadeira em roteirismo dentro do currículo em todas as Classes (apesar de tocarmos levemente no assunto \"roteiro\" no currículo comum, não tem a mesma profundidade da cadeira liberada para o tutorando+); \n> Você terá aulões sobre quaisquer assuntos que desejar. \n\n**Deseja ser um tutorando+?**",
-      "type": "button"
-    }
-  },
-  "knowledge": {
-    "inspiration": {
-      "question": "Quais obras e/ou autores te inspiraram para começar a escrever ou foram motivo para escrever o seu atual projeto?",
-      "type": "writer"
-    },
-    "writing": {
-      "question": "O que você escreve e que tipos gêneros pretende escrever?",
-      "type": "writer"
-    },
-    "webnovel": {
-      "question": "Você sabe o que é webnovel ou light novel e como escreve um desses dois? Se souber, explique.",
-      "type": "writer"
-    },
-    "chapter": {
-      "question": "Quais formas existem de compor um capítulo? Explique.",
-      "type": "writer"
-    },
-    "narrator": {
-      "question": "Consegue explicar a diferença de um narrador de primeira pessoa e um de terceira pessoa?",
-      "type": "writer"
-    },
-    "paragraph": {
-      "question": "Um parágrafo é estruturado como?",
-      "type": "writer"
-    },
-    "differences": {
-      "question": "Quais as diferenças existem em frase, oração e período?",
-      "type": "writer"
-    },
-    "signals": {
-      "question": "Que tipo de funções o travessão, itálico e aspas devem exercer no texto?",
-      "type": "writer"
-    },
-    "letter": {
-      "question": "Quando se deve colocar as palavras em letra maiúscula?",
-      "type": "writer"
-    },
-    "similar": {
-      "question": "Erra palavras com escrita e/ou som parecidos? (Exemplos simples: acender/ascender,  acento/assento, acidente/incidente, sob/sobre)",
-      "type": "writer"
-    },
-    "grammar": {
-      "question": "O que são substantivos, adjetivos e pronomes?",
-      "type": "writer"
-    },
-    "internet": {
-      "question": "Reconhece que sua escrita possui vícios de internet?",
-      "type": "writer"
-    },
-    "comma": {
-      "question": "A vírgula é usada para o que no texto?",
-      "type": "writer"
-    },
-    "punctuation": {
-      "question": "Quando deve usar exclamação, interrogação e reticências?",
-      "type": "writer"
-    },
-    "ellipse": {
-      "question": "Elipse é o quê?",
-      "type": "writer"
-    },
-    "dicendi": {
-      "question": "Se souber, como se deve usar o dicendi?",
-      "type": "writer"
-    },
-    "dialogue": {
-      "question": "O que faz um diálogo ser bom e útil na história?",
-      "type": "writer"
-    },
-    "creation": {
-      "question": "Um personagem deve ser criado de que forma?",
-      "type": "writer"
-    },
-    "message": {
-      "question": "O que gostaria de passar, no caso, a mensagem, com a sua história para os leitores?",
-      "type": "writer"
-    },
-    "public": {
-      "question": "Qual o tipo de público que você quer alcançar com o seu projeto?",
-      "type": "writer"
-    },
-    "objective": {
-      "question": "Seu objetivo como autor é qual?",
-      "type": "writer"
-    }
-  }
+	"data": {
+		"age": {
+			"question": "Qual sua idade?",
+			"type": "writer"
+		},
+		"hour": {
+			"question": "Quais são os melhores horários para você ter tutoria?",
+			"description": "(Considere que cada uma dura uns 50 minutos)",
+			"type": "writer"
+		},
+		"tutorando": {
+			"question": "Deseja ser Tutorando+?",
+			"description": "Com apenas R$5, você pode se tornar um Tutorando+ dentro da Novel Brasil. Tutorando+ é só uma forma de ajudar o servidor a fazer mais eventos, mais divulgação, novos membros, para a melhora do ambiente do server. \n\nAlém de ajudar o servidor, com essa assinatura mensal você pode garantir os seguintes bônus: \n\n> O tutorando+ tem uma aula extra por semana! Você pode pedir mais uma aula para o seu tutor, basta marcar com ele; \n> Cadeira em roteirismo dentro do currículo em todas as Classes (apesar de tocarmos levemente no assunto \"roteiro\" no currículo comum, não tem a mesma profundidade da cadeira liberada para o tutorando+); \n> Você terá aulões sobre quaisquer assuntos que desejar. \n\n**Deseja ser um tutorando+?**",
+			"type": "button"
+		}
+	},
+	"knowledge": {
+		"inspiration": {
+			"question": "Quais obras e/ou autores te inspiraram para começar a escrever ou foram motivo para escrever o seu atual projeto?",
+			"type": "writer"
+		},
+		"writing": {
+			"question": "O que você escreve e que tipos gêneros pretende escrever?",
+			"type": "writer"
+		},
+		"webnovel": {
+			"question": "Você sabe o que é webnovel ou light novel e como escreve um desses dois? Se souber, explique.",
+			"type": "writer"
+		},
+		"chapter": {
+			"question": "Quais formas existem de compor um capítulo? Explique.",
+			"type": "writer"
+		},
+		"narrator": {
+			"question": "Consegue explicar a diferença de um narrador de primeira pessoa e um de terceira pessoa?",
+			"type": "writer"
+		},
+		"paragraph": {
+			"question": "Um parágrafo é estruturado como?",
+			"type": "writer"
+		},
+		"differences": {
+			"question": "Quais as diferenças existem em frase, oração e período?",
+			"type": "writer"
+		},
+		"signals": {
+			"question": "Que tipo de funções o travessão, itálico e aspas devem exercer no texto?",
+			"type": "writer"
+		},
+		"letter": {
+			"question": "Quando se deve colocar as palavras em letra maiúscula?",
+			"type": "writer"
+		},
+		"similar": {
+			"question": "Erra palavras com escrita e/ou som parecidos? (Exemplos simples: acender/ascender,  acento/assento, acidente/incidente, sob/sobre)",
+			"type": "writer"
+		},
+		"grammar": {
+			"question": "O que são substantivos, adjetivos e pronomes?",
+			"type": "writer"
+		},
+		"internet": {
+			"question": "Reconhece que sua escrita possui vícios de internet?",
+			"type": "writer"
+		},
+		"comma": {
+			"question": "A vírgula é usada para o que no texto?",
+			"type": "writer"
+		},
+		"punctuation": {
+			"question": "Quando deve usar exclamação, interrogação e reticências?",
+			"type": "writer"
+		},
+		"ellipse": {
+			"question": "Elipse é o quê?",
+			"type": "writer"
+		},
+		"dicendi": {
+			"question": "Se souber, como se deve usar o dicendi?",
+			"type": "writer"
+		},
+		"dialogue": {
+			"question": "O que faz um diálogo ser bom e útil na história?",
+			"type": "writer"
+		},
+		"creation": {
+			"question": "Um personagem deve ser criado de que forma?",
+			"type": "writer"
+		},
+		"message": {
+			"question": "O que gostaria de passar, no caso, a mensagem, com a sua história para os leitores?",
+			"type": "writer"
+		},
+		"public": {
+			"question": "Qual o tipo de público que você quer alcançar com o seu projeto?",
+			"type": "writer"
+		},
+		"objective": {
+			"question": "Seu objetivo como autor é qual?",
+			"type": "writer"
+		}
+	}
 }
