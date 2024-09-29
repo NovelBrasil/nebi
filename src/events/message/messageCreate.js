@@ -33,9 +33,10 @@ module.exports = async (client, messageCreated) => {
         if (today > joined.getTime()) await createAccount(member, token)
         else {
             const messages = await getMessage(member, token)
-            if (messages.count >= 30) await createAccount(member, token)
+            if (messages && messages.count >= 30) await createAccount(member, token)
         }
     }
-
-    await addMessage(member, token)
+    finally {
+        await addMessage(member, token)
+    }
 }
