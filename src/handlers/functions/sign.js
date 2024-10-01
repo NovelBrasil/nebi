@@ -9,6 +9,7 @@ class SignHandler {
 		this.client = client;
 	}
 
+	// biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
 	load() {}
 
 	#extractString(template, initChar, finalChar) {
@@ -59,7 +60,7 @@ class SignHandler {
 	async setTopic(token, guild) {
 		try {
 			for (const key of this.#GENERAL_CHANNELS) {
-				const channelId = await getData(key, token);
+				const channelId = await getData(key, token, this.client);
 				if (channelId) {
 					const channel = await guild.channels.fetch(channelId);
 					if (channel) {

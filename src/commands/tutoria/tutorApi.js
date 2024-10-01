@@ -4,7 +4,7 @@ const { default: axios } = require(`axios`);
  * @param {String} token
  * @returns {Promise<{ tutor: String, roleId: String, tutorId: String, channelId: String }[]>}
  */
-const getTutors = async (token) => {
+const getTutors = async (token, client) => {
 	try {
 		const response = await axios.get(`${process.env.NEBI_API_URL}/tutor/all`, {
 			headers: {
@@ -15,7 +15,9 @@ const getTutors = async (token) => {
 			return response.data;
 		}
 	} catch (err) {
-		throw Error(`Erro ao fazer conexão.`);
+		const response = err.response;
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
 
@@ -24,7 +26,7 @@ const getTutors = async (token) => {
  * @param {String} token
  * @returns {Promise<{ tutor: String, roleId: String, tutorId: String, channelId: String }>}
  */
-const getTutor = async (tutor, token) => {
+const getTutor = async (tutor, token, client) => {
 	try {
 		const response = await axios.get(
 			`${process.env.NEBI_API_URL}/tutor/${tutor}`,
@@ -38,7 +40,9 @@ const getTutor = async (tutor, token) => {
 			return response.data;
 		}
 	} catch (err) {
-		throw Error(`Erro ao fazer conexão.`);
+		const response = err.response;
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
 

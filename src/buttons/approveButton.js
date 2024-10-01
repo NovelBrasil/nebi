@@ -28,7 +28,7 @@ module.exports = {
 			);
 		}
 
-		const studentIfExist = await existStudent(target.user.id, token);
+		const studentIfExist = await existStudent(target.user.id, token, client);
 		if (studentIfExist)
 			return await interaction.reply({
 				content: `Esse usuário já fez parte da tutoria. Use o comando para o adicionar novamente.`,
@@ -37,7 +37,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		const tutores = (await getTutors(token)).map((tutor) => {
+		const tutores = (await getTutors(token, client)).map((tutor) => {
 			return {
 				label: tutor.tutor,
 				value: tutor.tutorId,
@@ -64,7 +64,7 @@ module.exports = {
 			});
 			await result.update({ fetchReply: true });
 			const tutorId = result.values.at(0);
-			const tutor_data = await getTutor(tutorId, token);
+			const tutor_data = await getTutor(tutorId, token, client);
 			await addStudent(
 				target.id,
 				{
@@ -73,6 +73,7 @@ module.exports = {
 					Tutor: tutor_data.tutor,
 				},
 				token,
+				client
 			);
 
 			const roleId = tutor_data.roleId;
@@ -88,7 +89,7 @@ module.exports = {
 			await message.channel.send(
 				`${target.nickname} foi aprovado com sucesso.`,
 			);
-		} catch (error) {
+		} catch (_error) {
 			await message.delete();
 		}
 	},

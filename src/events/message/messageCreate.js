@@ -18,6 +18,20 @@ module.exports = async (client, messageCreated) => {
 	const member = messageCreated.member;
 	try {
 		const account = await fetchAccount(member, token);
+		if (!account) {
+			const joined = member.joinedAt;
+			joined.setMonth(joined.getMonth() + 1);
+
+			const today = new Date();
+
+			if (today > joined) await createAccount(member, token);
+			else {
+				const messages = await getMessage(member, token);
+				if (messages && messages.count >= 30)
+					await createAccount(member, token);
+			}
+			return;
+		}
 		const cooldown = client.addCooldown(member.id, 5);
 		if (cooldown) {
 			const xp_random = Math.floor(Math.random() * 9) + 1;
@@ -27,19 +41,11 @@ module.exports = async (client, messageCreated) => {
 				account.id,
 				{ xp: new_xp, level: account.level },
 				token,
+				client,
 			);
 		}
-	} catch {
-		const joined = member.joinedAt;
-		joined.setMonth(joined.getMonth() + 1);
-
-		const today = Date.now();
-
-		if (today > joined.getTime()) await createAccount(member, token);
-		else {
-			const messages = await getMessage(member, token);
-			if (messages && messages.count >= 30) await createAccount(member, token);
-		}
+	} catch (err) {
+		console.log(err);
 	} finally {
 		await addMessage(member, token);
 	}

@@ -6,7 +6,7 @@ const { default: axios } = require(`axios`);
  * @param {String} token
  * @returns {Promise<void>}
  */
-const addStudent = async (userId, data, token) => {
+const addStudent = async (userId, data, token, client) => {
 	try {
 		await axios.post(`${process.env.NEBI_API_URL}/student/${userId}`, data, {
 			headers: {
@@ -14,7 +14,9 @@ const addStudent = async (userId, data, token) => {
 			},
 		});
 	} catch (err) {
-		throw Error(`Erro ao fazer conexão.`);
+		const response = err.response;
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
 
@@ -24,7 +26,7 @@ const addStudent = async (userId, data, token) => {
  * @param {String} token
  * @returns {Promise<void>}
  */
-const updateStudentTutor = async (userId, data, token) => {
+const updateStudentTutor = async (userId, data, token, client) => {
 	try {
 		await axios.put(
 			`${process.env.NEBI_API_URL}/student/${userId}/data`,
@@ -36,7 +38,9 @@ const updateStudentTutor = async (userId, data, token) => {
 			},
 		);
 	} catch (err) {
-		throw Error(`Erro ao fazer conexão.`);
+		const response = err.response;
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
 
@@ -46,7 +50,7 @@ const updateStudentTutor = async (userId, data, token) => {
  * @param {String} token
  * @returns {Promise<{ id: String, name: String, tutor: String }>}
  */
-const existStudent = async (userId, token) => {
+const existStudent = async (userId, token, client) => {
 	try {
 		const { data } = await axios.get(
 			`${process.env.NEBI_API_URL}/student/${userId}`,
@@ -58,8 +62,9 @@ const existStudent = async (userId, token) => {
 		);
 		return data;
 	} catch (err) {
-		console.log(err);
-		throw Error(`Erro ao fazer conexão.`);
+		const response = err.response;
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
 

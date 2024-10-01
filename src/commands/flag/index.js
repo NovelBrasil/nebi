@@ -47,7 +47,7 @@ module.exports = {
 
 		switch (subcommand.name) {
 			case `trocar`:
-				await updateAccount(account.id, { flag: flagCode }, token);
+				await updateAccount(account.id, { flag: flagCode }, token, client);
 				return await interaction.reply({
 					content: `Você habilitou a bandeira ${searchFlag}!`,
 					ephemeral: true,

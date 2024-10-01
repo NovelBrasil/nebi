@@ -46,9 +46,12 @@ module.exports = {
 		const token = client.tokenApi;
 		const subcommand = options.data[0];
 		const u = options.getUser(`user`) || user;
-		const member = await interaction.guild.members.fetch({ user: u });
+		const guild = interaction.guild ?? interaction.client.guilds.cache.get(interaction.guildId);
+		const member = await guild?.members.fetch({ user: u });
 		if (!member) return;
-		await interaction.deferReply();
+
+		const reply = await interaction.deferReply();
+		if (!reply) throw new Error(`Erro ao responder interação.`);
 
 		if (subcommand.name == `criar`) {
 			const response = await createAccount(member, token);

@@ -1,4 +1,4 @@
-const { readJSON, createJSON } = require(`../../utils/fileUtils`);
+const { readJSON, createJSON, updateJSON } = require(`../../utils/fileUtils`);
 
 const axios = require(`axios`).default;
 
@@ -17,7 +17,7 @@ module.exports = class TokenHandler {
 	}
 
 	async update() {
-		this.client.tokenApi = await this.token();
+		this.client.tokenApi = await this.token(true);
 	}
 
 	/**
@@ -67,9 +67,15 @@ module.exports = class TokenHandler {
 	/**
 	 * @returns {Promise<String | undefined}
 	 */
-	async token() {
+	async token(update = false) {
 		const path = `./src/config/json/token.json`;
 		try {
+			if (update) {
+				const token = await this.#newToken();
+				const newData = { token };
+				updateJSON(path, newData);
+				return token;
+			}
 			return await this.#generateToken(path);
 		} catch (err) {
 			console.error(err);

@@ -25,7 +25,7 @@ module.exports = class FormManager {
 
 	async loadAsync() {
 		const token = this.client.tokenApi;
-		this.form_forum_id = await getData(`forum`, token);
+		this.form_forum_id = await getData(`forum`, token, this.client);
 
 		this.guild = this.client.guilds.cache.find(
 			(f) => f.id === this.client.guild_id,

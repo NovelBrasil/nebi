@@ -6,6 +6,8 @@ class FlagsConfig {
 	/**
 	 * @param {import("discord.js").Client} client
 	 */
+	
+	// biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
 	constructor() {}
 
 	/**

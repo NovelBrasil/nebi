@@ -58,7 +58,7 @@ module.exports = {
 						ephemeral: true,
 					});
 				account.badges.at(account.badges.indexOf(chooseBadge)).enabled = true;
-				await updateAccount(member, { badges: account.badges.sort() }, token);
+				await updateAccount(account.id, { badges: account.badges.sort() }, token, client);
 				return await interaction.reply({
 					content: `Você habilitou a medalha ${chooseBadge.name}!`,
 					ephemeral: true,
@@ -70,7 +70,7 @@ module.exports = {
 						ephemeral: true,
 					});
 				account.badges.at(account.badges.indexOf(chooseBadge)).enabled = false;
-				await updateAccount(member, { badges: account.badges.sort() }, token);
+				await updateAccount(account.id, { badges: account.badges.sort() }, token, client);
 				return await interaction.reply({
 					content: `Você desabilitou a medalha ${chooseBadge.name}!`,
 					ephemeral: true,

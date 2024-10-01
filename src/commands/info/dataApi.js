@@ -3,9 +3,10 @@ const { default: axios } = require(`axios`);
 /**
  * @param {{ key: String, value: String }} data
  * @param {String} token
+ * @param {import("discord.js").Client} client
  * @returns {Promise<String>}
  */
-const addData = async (data, token) => {
+const addData = async (data, token, client) => {
 	try {
 		const response = await axios.post(
 			`${process.env.NEBI_API_URL}/data`,
@@ -21,9 +22,8 @@ const addData = async (data, token) => {
 		}
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 400) throw Error(`Key ou value em falta!`);
-		if (response.status == 401) throw Error(`Não foi autorizado!`);
-		throw Error(`Erro ao fazer conexão.`);
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Adicionar Dados`);
 	}
 };
 
@@ -32,7 +32,7 @@ const addData = async (data, token) => {
  * @param {String} token
  * @returns {Promise<String>}
  */
-const updateData = async (data, token) => {
+const updateData = async (data, token, client) => {
 	try {
 		const response = await axios.put(
 			`${process.env.NEBI_API_URL}/data/${data.key}`,
@@ -46,9 +46,8 @@ const updateData = async (data, token) => {
 		return response.data.message;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 400) throw Error(`Key ou value em falta!`);
-		if (response.status == 401) throw Error(`Não foi autorizado!`);
-		throw Error(`Erro ao fazer conexão.`);
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Atualizar Dados`);
 	}
 };
 
@@ -57,7 +56,7 @@ const updateData = async (data, token) => {
  * @param {String} token
  * @returns {Promise<String | undefined>}
  */
-const getData = async (key, token) => {
+const getData = async (key, token, client) => {
 	try {
 		const { data } = await axios.get(
 			`${process.env.NEBI_API_URL}/data/name/${key}`,
@@ -70,9 +69,8 @@ const getData = async (key, token) => {
 		return data.id;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 400) return undefined;
-		if (response.status == 401) throw Error(`Não foi autorizado!`);
-		throw Error(`Erro ao fazer conexão.`);
+		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
 

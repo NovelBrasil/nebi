@@ -7,6 +7,7 @@ const { default: axios } = require(`axios`);
  */
 const createMessage = async (member, instance) => {
 	const userid = member.id;
+	const client = member.client;
 	try {
 		const response = await instance.post(`/`, {
 			userid,
@@ -16,26 +17,34 @@ const createMessage = async (member, instance) => {
 		return response.status == 201;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 400) throw Error(`${response.data.message}`);
-		if (response.status == 401) throw Error(`Não foi autorizado!`);
-		throw Error(`Erro ao fazer conexão.`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
+		client.emit(`errorApi`, err, `Deletar Conta`);
 	}
 };
 
 /**
- * @param {import("discord.js").GuildMember} member
+ * @param {String} userId
  * @param {import("axios").AxiosInstance} instance
  * @returns {Promise<Boolean>}
  */
-const putMessage = async (userId, data, instance) => {
+const putMessage = async (userId, data, instance, client) => {
 	try {
 		const response = await instance.put(`/${userId}`, data);
 		return response.status == 204;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 400) throw Error(`${response.data.message}`);
-		if (response.status == 401) throw Error(`Não foi autorizado!`);
-		throw Error(`Erro ao fazer conexão.`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
+		client.emit(`errorApi`, err, `Deletar Conta`);
 	}
 };
 
@@ -46,6 +55,7 @@ const putMessage = async (userId, data, instance) => {
  */
 const getMessage = async (member, instance) => {
 	const userId = member.id;
+	const client = member.client;
 	try {
 		const response =
 			typeof instance == "string"
@@ -59,8 +69,17 @@ const getMessage = async (member, instance) => {
 					)
 				: await instance.get(`/userid/${userId}`);
 		return response.data;
-	} catch (_err) {
-		return undefined;
+	} catch (err) {
+		const response = err.response;
+		if (response) {
+			if (response.status == 401)
+				return client.emit(
+					`errorApi`,
+					err,
+					`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+				);
+			client.emit(`errorApi`, err, `Pegar Mensage`);
+		}
 	}
 };
 
@@ -69,8 +88,9 @@ const getMessage = async (member, instance) => {
  * @param {String} token
  */
 const addMessage = async (member, token) => {
+	const client = member.client;
 	try {
-		const client = axios.create({
+		const instance = axios.create({
 			baseURL: `${process.env.NEBI_API_URL}/message`,
 			headers: {
 				Authorization: token,
@@ -78,14 +98,15 @@ const addMessage = async (member, token) => {
 			},
 		});
 
-		const get = await getMessage(member, client);
-		if (!Object.keys(get).length) {
-			await createMessage(member, client);
+		const get = await getMessage(member, instance, client);
+		if (!get || !Object.keys(get).length) {
+			await createMessage(member, instance, client);
 		} else
 			await putMessage(
 				get.id,
 				{ count: get.count + 1, last: Date.now() },
-				client,
+				instance,
+				client
 			);
 	} catch (err) {
 		console.log(err);
@@ -93,12 +114,11 @@ const addMessage = async (member, token) => {
 };
 
 /**
- * @param {import("discord.js").GuildMember} member
+ * @param {String} userId
  * @param {String} token
  * @returns {Promise<Boolean>}
  */
-const deleteMessage = async (member, token) => {
-	const userId = member.id;
+const deleteMessage = async (userId, token, client) => {
 	try {
 		const response = await axios.delete(
 			`${process.env.NEBI_API_URL}/messages/${userId}`,
@@ -111,10 +131,13 @@ const deleteMessage = async (member, token) => {
 		return response.status == 204;
 	} catch (err) {
 		const response = err.response;
-		console.log(err);
-		if (response.status == 400) throw Error(`UserId ou username em falta!`);
-		if (response.status == 401) throw Error(`Não foi autorizado!`);
-		throw Error(`Erro ao fazer conexão.`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
+		client.emit(`errorApi`, err, `Deletar Conta`);
 	}
 };
 

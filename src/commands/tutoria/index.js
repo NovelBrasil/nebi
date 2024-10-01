@@ -67,7 +67,7 @@ module.exports = {
 		const subcommand = options.data[0];
 
 		const target = options.getUser(`tutorando`);
-		const studentIfExist = await existStudent(target.id, token);
+		const studentIfExist = await existStudent(target.id, token, client);
 		const member = await client.guilds.cache
 			.map(async (g) => await g.members.fetch({ user: target }))
 			.at(0);
@@ -84,7 +84,7 @@ module.exports = {
 		if (subcommand.name == `adicionar`) {
 			const tutorUser = options.getUser(`tutor`);
 			if (tutorUser) {
-				const tutorData = await getTutor(tutorUser.id, token);
+				const tutorData = await getTutor(tutorUser.id, token, client);
 				if (!tutorData.tutor)
 					return await interaction.followUp(
 						`O tutor \`${tutorUser.username}\` não está registrado.`,
@@ -133,7 +133,7 @@ module.exports = {
 					await message.delete();
 					const value = button.customId.split(`-`)[1];
 					remove_all = value === `yes` ? true : false;
-				} catch (err) {
+				} catch (_err) {
 					await message.delete();
 				}
 			}
@@ -152,10 +152,10 @@ module.exports = {
 
 			/* ADD PLANILHA */
 			if (studentIfExist) {
-				await updateStudentTutor(target.id, { tutor: Tutor }, token);
+				await updateStudentTutor(target.id, { tutor: Tutor }, token, client);
 
 				const old_tutor = studentIfExist.tutor;
-				const tutorData = await getTutor(old_tutor, token);
+				const tutorData = await getTutor(old_tutor, token, client);
 				if (member.roles.cache.has(tutorData.roleId))
 					await member.roles.remove(tutorData.roleId);
 			} else
@@ -163,6 +163,7 @@ module.exports = {
 					target.id,
 					{ AtualUsername: target.username, Nickname: member.nickname, Tutor },
 					token,
+					client
 				);
 			return await interaction.followUp(
 				`O \`${target.username}\` foi adicionado como tutorando de **${Tutor}**.`,
@@ -176,13 +177,13 @@ module.exports = {
 				);
 
 			const old_tutor = studentIfExist.tutor;
-			const tutorData = await getTutor(old_tutor, token);
+			const tutorData = await getTutor(old_tutor, token, client);
 			if (member.roles.cache.has(tutorData.roleId))
 				await member.roles.remove(tutorData.roleId);
 
 			const tutorUser = options.getUser(`tutor`);
 			if (tutorUser) {
-				const tutorData = await getTutor(tutorUser.id, token);
+				const tutorData = await getTutor(tutorUser.id, token, client);
 				if (!tutorData.tutor)
 					return await interaction.followUp(
 						`O tutor \`${tutorUser.username}\` não está registrado.`,
@@ -194,7 +195,7 @@ module.exports = {
 			if (roleId && !member.roles.cache.has(roleId))
 				await member.roles.add(roleId);
 
-			await updateStudentTutor(target.id, { tutor: Tutor }, token);
+			await updateStudentTutor(target.id, { tutor: Tutor }, token, client);
 			return await interaction.followUp(
 				`O \`${target.username}\` foi alterado para **${Tutor}**.`,
 			);
@@ -207,7 +208,7 @@ module.exports = {
 				);
 
 			const old_tutor = studentIfExist.tutor;
-			const tutorData = await getTutor(old_tutor, token);
+			const tutorData = await getTutor(old_tutor, token, client);
 			if (member.roles.cache.has(tutorData.roleId))
 				await member.roles.remove(tutorData.roleId);
 
@@ -221,7 +222,7 @@ module.exports = {
 			if (!member.roles.cache.has(noClassRole.id))
 				await member.roles.add(noClassRole);
 
-			await updateStudentTutor(target.id, { tutor: `Inativo` }, token);
+			await updateStudentTutor(target.id, { tutor: `Inativo` }, token, client);
 			return await interaction.followUp(
 				`O \`${target.username}\` foi removido da tutoria.`,
 			);

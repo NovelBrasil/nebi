@@ -61,8 +61,8 @@ module.exports = {
 
 		const value =
 			subcommand.name == `canal` ? optionGet.channel.id : optionGet.role.id;
-		const data = await getData(key, token);
-		if (data) await updateData({ key, value }, token);
+		const data = await getData(key, token, client);
+		if (data) await updateData({ key, value }, token, client);
 		else
 			await addData(
 				{
@@ -72,6 +72,7 @@ module.exports = {
 					category: subcommand.name,
 				},
 				token,
+				client,
 			);
 
 		let markResult = `<#${value}> foi`;
