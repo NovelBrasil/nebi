@@ -163,7 +163,7 @@ module.exports = {
 					target.id,
 					{ AtualUsername: target.username, Nickname: member.nickname, Tutor },
 					token,
-					client
+					client,
 				);
 			return await interaction.followUp(
 				`O \`${target.username}\` foi adicionado como tutorando de **${Tutor}**.`,

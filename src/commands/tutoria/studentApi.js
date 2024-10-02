@@ -15,7 +15,12 @@ const addStudent = async (userId, data, token, client) => {
 		});
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
@@ -39,7 +44,12 @@ const updateStudentTutor = async (userId, data, token, client) => {
 		);
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
@@ -63,7 +73,12 @@ const existStudent = async (userId, token, client) => {
 		return data;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };

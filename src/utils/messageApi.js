@@ -106,7 +106,7 @@ const addMessage = async (member, token) => {
 				get.id,
 				{ count: get.count + 1, last: Date.now() },
 				instance,
-				client
+				client,
 			);
 	} catch (err) {
 		console.log(err);

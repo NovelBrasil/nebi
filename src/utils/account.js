@@ -59,7 +59,8 @@ const fetchAccount = async (member, token) => {
 			},
 		});
 		const {
-			data: { position: rank, ...rest }, status
+			data: { position: rank, ...rest },
+			status,
 		} = await client.get(`/${userId}/ranking`);
 		if (status === 204) return undefined;
 		return { ...rest, rank };
@@ -77,7 +78,7 @@ const fetchAccount = async (member, token) => {
 
 /**
  * @param {String} userId
- * @param {{ username: String, aboutMe: String, background: String, flag: String, glows: Number, level: Number, xp: Number, badges: { enabled: boolean, name: string }[] }} account
+ * @param {{ username: String, aboutme: String, background: String, flag: String, glows: Number, level: Number, xp: Number, badges: { enabled: boolean, name: string }[] }} account
  * @param {String} token
  * @returns {Promise<String>}
  */

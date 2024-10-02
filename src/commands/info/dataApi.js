@@ -22,7 +22,12 @@ const addData = async (data, token, client) => {
 		}
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Adicionar Dados`);
 	}
 };
@@ -46,7 +51,12 @@ const updateData = async (data, token, client) => {
 		return response.data.message;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Atualizar Dados`);
 	}
 };
@@ -69,7 +79,12 @@ const getData = async (key, token, client) => {
 		return data.id;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };

@@ -16,7 +16,12 @@ const getTutors = async (token, client) => {
 		}
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };
@@ -41,7 +46,12 @@ const getTutor = async (tutor, token, client) => {
 		}
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401) return client.emit(`errorApi`, err, `FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`);
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
 		client.emit(`errorApi`, err, `Pegar Dados`);
 	}
 };

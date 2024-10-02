@@ -6,7 +6,7 @@ class FlagsConfig {
 	/**
 	 * @param {import("discord.js").Client} client
 	 */
-	
+
 	// biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
 	constructor() {}
 
@@ -15,11 +15,7 @@ class FlagsConfig {
 	 * @returns {String}
 	 */
 	async load() {
-		const response = await axios
-			.get(`https://restcountries.com/v3.1/all`)
-			.catch((error) => {
-				console.error(`Erro:`, error);
-			});
+		const response = await axios.get(`https://restcountries.com/v3.1/all`);
 		if (response.status == 200) {
 			for (const data of response.data) {
 				const flag = String(data.flags.png)

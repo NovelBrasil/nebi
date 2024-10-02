@@ -73,7 +73,7 @@ module.exports = {
 					Tutor: tutor_data.tutor,
 				},
 				token,
-				client
+				client,
 			);
 
 			const roleId = tutor_data.roleId;

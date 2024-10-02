@@ -4,6 +4,7 @@ const { AttachmentBuilder } = require(`discord.js`);
 const { createAccount, fetchAccount } = require(`../../utils/account`);
 const { openMenu } = require(`./badges`);
 const { openMenuFlag } = require(`./flags`);
+const { changeAboutme } = require("./aboutme");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -34,6 +35,9 @@ module.exports = {
 			sub.setName(`bandeiras`).setDescription(`Veja sobre as bandeiras.`),
 		)
 		.addSubcommand((sub) =>
+			sub.setName(`sobremim`).setDescription(`Altere seu sobre mim.`),
+		)
+		.addSubcommand((sub) =>
 			sub.setName(`fundos`).setDescription(`Veja sobre os planos de fundo.`),
 		),
 
@@ -46,9 +50,15 @@ module.exports = {
 		const token = client.tokenApi;
 		const subcommand = options.data[0];
 		const u = options.getUser(`user`) || user;
-		const guild = interaction.guild ?? interaction.client.guilds.cache.get(interaction.guildId);
+		const guild =
+			interaction.guild ??
+			interaction.client.guilds.cache.get(interaction.guildId);
 		const member = await guild?.members.fetch({ user: u });
 		if (!member) return;
+
+		if (subcommand.name == `sobremim`) {
+			return await changeAboutme(interaction);
+		}
 
 		const reply = await interaction.deferReply();
 		if (!reply) throw new Error(`Erro ao responder interação.`);

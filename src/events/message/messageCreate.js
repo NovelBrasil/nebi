@@ -2,7 +2,9 @@ const { ChannelType } = require(`discord.js`);
 const { createAccount, fetchAccount, updateAccount } = require(
 	`../../utils/account`,
 );
-const { addMessage, getMessage } = require(`../../utils/messageApi`);
+const { addMessage, getMessage, deleteMessage } = require(
+	`../../utils/messageApi`,
+);
 
 /**
  * @param {import("discord.js").Client} client
@@ -27,12 +29,15 @@ module.exports = async (client, messageCreated) => {
 			if (today > joined) await createAccount(member, token);
 			else {
 				const messages = await getMessage(member, token);
-				if (messages && messages.count >= 30)
+				if (messages && messages.count >= 30) {
 					await createAccount(member, token);
+					await deleteMessage(messages.id, token, client);
+				}
+				await addMessage(member, token);
 			}
 			return;
 		}
-		const cooldown = client.addCooldown(member.id, 5);
+		const cooldown = client.addCooldown(member.id, 10);
 		if (cooldown) {
 			const xp_random = Math.floor(Math.random() * 9) + 1;
 			const current_xp = account.xp;
@@ -46,7 +51,5 @@ module.exports = async (client, messageCreated) => {
 		}
 	} catch (err) {
 		console.log(err);
-	} finally {
-		await addMessage(member, token);
 	}
 };
