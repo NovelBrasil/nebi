@@ -79,6 +79,7 @@ const getData = async (key, token, client) => {
 		return data.id;
 	} catch (err) {
 		const response = err.response;
+		if (!response) return;
 		if (response.status == 401)
 			return client.emit(
 				`errorApi`,

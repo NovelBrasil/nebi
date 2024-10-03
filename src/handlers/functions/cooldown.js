@@ -10,10 +10,10 @@ class CooldownHandler {
 		const COOLDOWN = new Map();
 		this.client.addCooldown = function (userId, delay) {
 			if (COOLDOWN.has(userId))
-				if (Date.now() < COOLDOWN.get(userId)) return false;
+				if (new Date() < COOLDOWN.get(userId)) return false;
 			const date = new Date();
 			date.setSeconds(date.getSeconds() + delay);
-			COOLDOWN.set(userId, date.getTime());
+			COOLDOWN.set(userId, date);
 			return true;
 		};
 	}

@@ -17,13 +17,14 @@ const createMessage = async (member, instance) => {
 		return response.status == 201;
 	} catch (err) {
 		const response = err.response;
+		if (!response) return;
 		if (response.status == 401)
 			return client.emit(
 				`errorApi`,
 				err,
 				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
 			);
-		client.emit(`errorApi`, err, `Deletar Conta`);
+		client.emit(`errorApi`, err, `Criar Mensagem`);
 	}
 };
 
@@ -44,7 +45,7 @@ const putMessage = async (userId, data, instance, client) => {
 				err,
 				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
 			);
-		client.emit(`errorApi`, err, `Deletar Conta`);
+		client.emit(`errorApi`, err, `Atualizar Mensagem`);
 	}
 };
 
@@ -71,15 +72,14 @@ const getMessage = async (member, instance) => {
 		return response.data;
 	} catch (err) {
 		const response = err.response;
-		if (response) {
-			if (response.status == 401)
-				return client.emit(
-					`errorApi`,
-					err,
-					`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
-				);
-			client.emit(`errorApi`, err, `Pegar Mensage`);
-		}
+		if (!response) return;
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
+		client.emit(`errorApi`, err, `Pegar Mensagem`);
 	}
 };
 
@@ -109,7 +109,15 @@ const addMessage = async (member, token) => {
 				client,
 			);
 	} catch (err) {
-		console.log(err);
+		const response = err.response;
+		if (!response) return;
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
+		client.emit(`errorApi`, err, `Criar Mensagem`);
 	}
 };
 
@@ -131,13 +139,14 @@ const deleteMessage = async (userId, token, client) => {
 		return response.status == 204;
 	} catch (err) {
 		const response = err.response;
+		if (!response) return;
 		if (response.status == 401)
 			return client.emit(
 				`errorApi`,
 				err,
 				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
 			);
-		client.emit(`errorApi`, err, `Deletar Conta`);
+		client.emit(`errorApi`, err, `Deletar Mensagem`);
 	}
 };
 

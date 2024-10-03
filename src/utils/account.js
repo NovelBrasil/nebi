@@ -33,6 +33,7 @@ const createAccount = async (member, token) => {
 		if (response.status == 201) return true;
 	} catch (err) {
 		const response = err.response;
+		if (!response) return;
 		if (response.status == 401)
 			return client.emit(
 				`errorApi`,
@@ -40,6 +41,37 @@ const createAccount = async (member, token) => {
 				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
 			);
 		client.emit(`errorApi`, err, `Criar Conta`);
+	}
+};
+
+/**
+ * @param {String} token
+ * @returns {Promise<{ username: String, aboutMe: String, background: String, flag: String, balance: { glows: Number }, level: { current: Number, next: Number }, xp: { current: Number, max: Number }, badges: { enabled: boolean, name: string }[] }[] | undefined>}
+ */
+const ranking = async (token, client) => {
+	try {
+		const client = axios.create({
+			baseURL: `${process.env.NEBI_API_URL}/user`,
+			headers: {
+				Authorization: token,
+			},
+		});
+		const {
+			data: { position: rank, ...rest },
+			status,
+		} = await client.get(`/ranking`);
+		if (status === 204) return undefined;
+		return { ...rest, rank };
+	} catch (err) {
+		const response = err.response;
+		if (!response) return;
+		if (response.status == 401)
+			return client.emit(
+				`errorApi`,
+				err,
+				`FST_JWT_AUTHORIZATION_TOKEN_EXPIRED`,
+			);
+		client.emit(`errorApi`, err, `Pegar Conta`);
 	}
 };
 
@@ -66,6 +98,7 @@ const fetchAccount = async (member, token) => {
 		return { ...rest, rank };
 	} catch (err) {
 		const response = err.response;
+		if (!response) return;
 		if (response.status == 401)
 			return client.emit(
 				`errorApi`,
@@ -129,6 +162,7 @@ const deleteAccount = async (userId, token, client) => {
 		return response.status == 204;
 	} catch (err) {
 		const response = err.response;
+		if (!response) return;
 		if (response.status == 401)
 			return client.emit(
 				`errorApi`,
@@ -139,4 +173,10 @@ const deleteAccount = async (userId, token, client) => {
 	}
 };
 
-module.exports = { createAccount, fetchAccount, updateAccount, deleteAccount };
+module.exports = {
+	createAccount,
+	fetchAccount,
+	updateAccount,
+	deleteAccount,
+	ranking,
+};

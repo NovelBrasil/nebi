@@ -1,10 +1,43 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require(`discord.js`);
 const { fetchAccount, updateAccount } = require(`../../utils/account`);
+const ms = require("ms");
+const { createBoost, deleteBoost } = require("./boost");
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName(`admin`)
 		.setDescription(`Veja seu profile.`)
+		.addSubcommand((sub) =>
+			sub
+				.setName(`boost`)
+				.setDescription(`Gerenciar boost.`)
+				.addStringOption((option) =>
+					option
+						.setName(`action`)
+						.setDescription(`Ação a ser realizada. Ações: add e remove`)
+						.setRequired(true),
+				)
+				.addStringOption((option) =>
+					option
+						.setName(`id`)
+						.setDescription(`O id de regaste do boost.`)
+						.setRequired(false),
+				)
+				.addStringOption((option) =>
+					option
+						.setName(`tempo`)
+						.setDescription(
+							`O tempo deverá ser número + tipo, por exemplo: 1s, 1m, 1h, 1d.`,
+						)
+						.setRequired(false),
+				)
+				.addIntegerOption((option) =>
+					option
+						.setName(`multiplier`)
+						.setDescription(`O multiplicador do XP.`)
+						.setRequired(false),
+				),
+		)
 		.addSubcommand((sub) =>
 			sub
 				.setName(`glows`)
@@ -63,8 +96,27 @@ module.exports = {
 		const { options } = interaction;
 		const token = client.tokenApi;
 		const subcommand = options.data[0];
-		const u = options.getUser(`user`);
 		const action = options.getString(`action`);
+		if (subcommand.name == `boost`) {
+			// NÃO ESQUECER DE FAZER PRA VERIFICAR SE AS OPÇÕES EXISTEM
+			if (action === "add") {
+				const multiplier = options.getInteger(`multiplier`);
+				const time = ms(options.getString(`tempo`));
+				const boost = await createBoost({ multiplier, time }, token, client);
+				return await interaction.reply({
+					content: `Você criou um boost de ${multiplier}x por ${time}. O id de resgate do boost é: \`${boost.id}\``,
+					ephemeral: true,
+				});
+			} else if (action === "remove") {
+				const id = options.getString(`id`);
+				await deleteBoost(id, token, client); // <- Resolver problema
+				return await interaction.reply({
+					content: `Você removeu o boost de id: \`${id}\``,
+					ephemeral: true,
+				});
+			}
+		}
+		const u = options.getUser(`user`);
 		const guild =
 			interaction.guild ??
 			interaction.client.guilds.cache.get(interaction.guildId);
