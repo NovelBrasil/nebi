@@ -68,9 +68,11 @@ module.exports = {
 
 		const target = options.getUser(`tutorando`);
 		const studentIfExist = await existStudent(target.id, token, client);
-		const member = await client.guilds.cache
-			.map(async (g) => await g.members.fetch({ user: target }))
-			.at(0);
+		const guild =
+			interaction.guild ??
+			interaction.client.guilds.cache.get(interaction.guildId);
+		const member = await guild?.members.fetch({ user: target });
+		if (!member) return;
 
 		let Tutor = `SemTutor`;
 		let roleId = undefined;
