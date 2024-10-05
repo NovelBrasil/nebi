@@ -19,13 +19,19 @@ module.exports = {
 		const studentRole = await checkRole(client, `student`);
 		const classFRole = await checkRole(client, `classeF`);
 
-		const target = guild.members.cache.find(
-			(member) => member.user.username == channel.name,
-		);
+		const members = await guild.members.fetch({query: channel.name, limit: 1})
+		// TODO: handle if more than 1 member is returned
+		const target = members.values().next().value
+
+		// const target = guild.members.cache.find(
+		// 	(member) => member.user.username == channel.name,
+		// );
+
 		if (!target) {
-			throw Error(
-				`Usuário não encontrado. Verifique se o nome do fórum é de uma pessoa real ou se ainda está no servidor.`,
-			);
+			return await interaction.reply({
+				content:`Usuário não encontrado. Verifique se o nome da thread é de uma pessoa real ou se ainda está no servidor. Caso a pessoa tenha mudado de username, mude o nome da thread para o novo username e tente novamente.`,
+				ephemeral: true
+			})
 		}
 
 		const studentIfExist = await existStudent(target.user.id, token, client);
@@ -42,7 +48,7 @@ module.exports = {
 				label: tutor.tutor,
 				value: tutor.tutorId,
 			};
-		});
+		}).filter(x => x.value !== '-');
 
 		const row = new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder()
@@ -87,7 +93,7 @@ module.exports = {
 				await target.roles.add(studentRole);
 
 			await message.channel.send(
-				`${target.nickname} foi aprovado com sucesso.`,
+				`<@${target.id}> foi aprovado com sucesso.`,
 			);
 		} catch (_error) {
 			await message.delete();
