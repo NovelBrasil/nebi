@@ -64,8 +64,7 @@ module.exports = async (client, messageCreated) => {
 					client,
 				);
 				const date = new Date(expireIn);
-				if (date > new Date())
-					boost = multiplier;
+				if (date > new Date()) boost = multiplier;
 				else await updateAccount(account.id, { boost: null }, token, client);
 			}
 			const xp_random = addXp(messageCreated.content.length);
