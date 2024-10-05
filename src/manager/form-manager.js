@@ -290,7 +290,7 @@ module.exports = class FormManager {
 		if (!channel.isDMBased()) return;
 
 		const filter = !customId
-			? (msg) => msg.content != ``
+			? (msg) => msg.content !== "" && !msg.author.bot
 			: (interaction) =>
 					(!button
 						? interaction.customId

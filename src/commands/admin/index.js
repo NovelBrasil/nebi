@@ -101,7 +101,19 @@ module.exports = {
 			// NÃO ESQUECER DE FAZER PRA VERIFICAR SE AS OPÇÕES EXISTEM
 			if (action === "add") {
 				const multiplier = options.getInteger(`multiplier`);
+				if (multiplier < 1) {
+					return await interaction.reply({
+						content: `O multiplicador deve ser maior que 1.`,
+						ephemeral: true,
+					});
+				}
 				const time = ms(options.getString(`tempo`));
+				if (!time) {
+					return await interaction.reply({
+						content: `O tempo inserido é inválido.`,
+						ephemeral: true,
+					});
+				}
 				const boost = await createBoost({ multiplier, time }, token, client);
 				return await interaction.reply({
 					content: `Você criou um boost de ${multiplier}x por ${time}. O id de resgate do boost é: \`${boost.id}\``,
@@ -109,7 +121,13 @@ module.exports = {
 				});
 			} else if (action === "remove") {
 				const id = options.getString(`id`);
-				await deleteBoost(id, token, client); // <- Resolver problema
+				if (!id) {
+					return await interaction.reply({
+						content: `Você deve inserir o id de regaste do boost.`,
+						ephemeral: true,
+					});
+				}
+				await deleteBoost(id, token, client);
 				return await interaction.reply({
 					content: `Você removeu o boost de id: \`${id}\``,
 					ephemeral: true,

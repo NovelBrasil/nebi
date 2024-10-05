@@ -35,7 +35,7 @@ const createBoost = async (payload, token, client) => {
  * @param {String} id
  * @param {String} token
  * @param {import("discord.js").Client} client
- * @returns {Promise<{ username: String, aboutMe: String, background: String, flag: String, balance: { glows: Number }, level: { current: Number, next: Number }, xp: { current: Number, max: Number }, badges: { enabled: boolean, name: string }[] } | undefined>}
+ * @returns {Promise<{ id: String, time: number, multiplier: number, expireIn: number, activeBy: string } | undefined>}
  */
 const fetchBoost = async (id, token, client) => {
 	try {
