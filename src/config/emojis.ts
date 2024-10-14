@@ -1,10 +1,12 @@
+import { Client } from "discord.js";
+
 class EmojiConfig {
 	#EMOJIS = new Map();
 
 	/**
 	 * @param {import("discord.js").Client} client
 	 */
-	constructor(client) {
+	constructor(client: Client) {
 		client.emojis.cache.forEach((emoji) => {
 			this.#EMOJIS.set(emoji.name, `<:${emoji.identifier}>`);
 		});
@@ -14,7 +16,7 @@ class EmojiConfig {
 	 * @param {String} name
 	 * @returns {String}
 	 */
-	getEmoji(name) {
+	getEmoji(name: string) {
 		return this.#EMOJIS.get(name);
 	}
 }

@@ -10,7 +10,7 @@ class DiscordConfig {
 		this.#COLORS.set(`form`, `D000BA`);
 	}
 
-	setDevMode(bool) {
+	setDevMode(bool: boolean) {
 		this.#DEV_MODE = bool;
 	}
 
@@ -18,7 +18,7 @@ class DiscordConfig {
 		return this.#DEV_MODE;
 	}
 
-	getColor(key) {
+	getColor(key: `default` | `error` | `success` | `form`) {
 		return this.#COLORS.get(key);
 	}
 
