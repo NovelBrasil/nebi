@@ -1,3 +1,5 @@
+import { ButtonInteraction, Client } from "discord.js";
+
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require(
 	`discord.js`,
 );
@@ -9,7 +11,7 @@ module.exports = {
 	 * @param {import("discord.js").Client} client
 	 * @param {import("discord.js").ButtonInteraction} interaction
 	 */
-	run: async (client, interaction) => {
+	run: async (client: Client, interaction:ButtonInteraction) => {
 		const row = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
 				.setCustomId(`acceptTerms`)

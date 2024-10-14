@@ -1,3 +1,5 @@
+import { ButtonInteraction, Client } from "discord.js";
+
 // eslint-disable-next-line no-unused-vars
 const { ActionRowBuilder } = require(`discord.js`);
 const { existStudent, addStudent } = require(`../commands/tutoria/studentApi`);
@@ -12,7 +14,7 @@ module.exports = {
 	 * @param {import("discord.js").Client} client
 	 * @param {import("discord.js").ButtonInteraction} interaction
 	 */
-	run: async (client, interaction) => {
+	run: async (client: Client, interaction: ButtonInteraction) => {
 		const { guild, channel } = interaction;
 		const token = client.tokenApi;
 

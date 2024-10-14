@@ -1,3 +1,5 @@
+import { ButtonInteraction, Client } from "discord.js";
+
 const {
 	EmbedBuilder,
 	ActionRowBuilder,
@@ -17,7 +19,7 @@ module.exports = {
 	 * @param {import("discord.js").Client} client
 	 * @param {import("discord.js").ButtonInteraction} interaction
 	 */
-	run: async (client, interaction) => {
+	run: async (client: Client, interaction: ButtonInteraction) => {
 		const { user } = interaction;
 
 		const support_role = await checkRole(client, `support`);

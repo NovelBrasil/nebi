@@ -1,3 +1,5 @@
+import { ButtonInteraction, Client, ClientApplication, Interaction, InteractionType } from "discord.js";
+
 // eslint-disable-next-line no-unused-vars
 const FormManager = require(`../manager/form-manager`);
 
@@ -8,7 +10,7 @@ module.exports = {
 	 * @param {import("discord.js").Client} client
 	 * @param {import("discord.js").ButtonInteraction} interaction
 	 */
-	run: async (client, interaction) => {
+	run: async (client: Client, interaction: ButtonInteraction) => {
 		/**
 		 * @type {FormManager}
 		 */
