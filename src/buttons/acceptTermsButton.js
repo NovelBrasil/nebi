@@ -22,12 +22,16 @@ module.exports = {
 		} catch (error) {
 			form_manager.delete(userId);
 			console.error(error);
-			if (error.message)
-				return await interaction.user.send({ content: error.message });
-			else
-				return await interaction.user.send({
-					content: `Você não respondeu o questionário a tempo.`,
-				});
+			try {
+				if (error.message)
+					return await interaction.user.send({ content: error.message });
+				else
+					return await interaction.user.send({
+						content: `Você não respondeu o questionário a tempo.`,
+					});
+			} catch (error) {
+				console.log(error)
+			}
 		}
 	},
 };
