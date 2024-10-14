@@ -1,3 +1,5 @@
+import { Client } from "discord.js";
+
 const { DiscordEmbedMenu, DiscordEmbedMenuPage } = require(
 	`@novelbrasil/discord.js-embed-menu`,
 );
@@ -53,7 +55,7 @@ function getMainPage() {
  * @param {{ enabled: boolean, name: string }[]} badges
  * @returns {import("@novelbrasil/discord.js-embed-menu").DiscordEmbedMenuPage}
  */
-function getYourBadgesPage(client, badges = []) {
+function getYourBadgesPage(client: Client, badges: {enabled: boolean, name: string}[] = []) {
 	const activies = badges
 		.filter((b) => b.enabled)
 		.map((b) => client.config.emoji.getEmoji(b.name));
@@ -115,7 +117,7 @@ function getYourBadgesPage(client, badges = []) {
  * @param {import("discord.js").CommandInteraction} interaction
  * @param {{ enabled: boolean, name: string }[]} badges
  */
-async function openMenu(interaction, badges) {
+async function openMenu(interaction: Client, badges: { enabled: boolean, name: string }[]) {
 	const mainPage = getMainPage();
 	const yourBadgesPage = getYourBadgesPage(interaction.client, badges);
 

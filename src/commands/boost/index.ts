@@ -1,3 +1,5 @@
+import { Client, CommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
+
 const {
 	SlashCommandBuilder,
 	// ButtonStyle,
@@ -11,7 +13,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName(`boost`)
 		.setDescription(`Veja seu profile.`)
-		.addSubcommand((sub) =>
+		.addSubcommand((sub: SlashCommandSubcommandBuilder) =>
 			sub
 				.setName(`resgatar`)
 				.setDescription(`Resgatar um boost.`)
@@ -31,7 +33,7 @@ module.exports = {
 	 * @param {import("discord.js").CommandInteraction} interaction
 	 */
 
-	run: async (client, interaction) => {
+	run: async (client: Client, interaction: CommandInteraction) => {
 		const { options, member } = interaction;
 		const token = client.tokenApi;
 		const subcommand = options.data[0];

@@ -1,3 +1,5 @@
+import { CommandInteraction } from "discord.js";
+
 const {
 	ModalBuilder,
 	TextInputBuilder,
@@ -9,7 +11,7 @@ const { fetchAccount, updateAccount } = require("../../utils/account");
 /**
  * @param {import("discord.js").CommandInteraction} interaction
  */
-async function changeAboutme(interaction) {
+async function changeAboutme(interaction: CommandInteraction) {
 	const {
 		member,
 		client: { tokenApi: token },

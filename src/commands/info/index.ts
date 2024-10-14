@@ -1,3 +1,5 @@
+import { Client, CommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
+
 const { SlashCommandBuilder, PermissionFlagsBits } = require(`discord.js`);
 const { getData, addData, updateData } = require(`./dataApi`);
 
@@ -8,7 +10,7 @@ module.exports = {
 			`Armazenar informações cruciais para o funcionamento do bot.`,
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.addSubcommand((subcommand) =>
+		.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 			subcommand
 				.setName(`cargo`)
 				.setDescription(`Adicionar um cargo ao armazenamento.`)
@@ -27,7 +29,7 @@ module.exports = {
 						.setRequired(true),
 				),
 		)
-		.addSubcommand((subcommand) =>
+		.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 			subcommand
 				.setName(`canal`)
 				.setDescription(`Adicionar um canal ao armazenamento.`)
@@ -52,7 +54,7 @@ module.exports = {
 	 * @param {import("discord.js").CommandInteraction} interaction
 	 */
 
-	run: async (client, interaction) => {
+	run: async  (client: Client, interaction: CommandInteraction) => {
 		const { options } = interaction;
 		const token = client.tokenApi;
 		const subcommand = options.data[0];

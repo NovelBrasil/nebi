@@ -1,3 +1,5 @@
+import { Client, CommandInteraction } from "discord.js";
+
 const {
 	SlashCommandBuilder,
 	// ButtonStyle,
@@ -13,7 +15,7 @@ module.exports = {
 	 * @param {import("discord.js").CommandInteraction} interaction
 	 */
 
-	run: async (client, interaction) => {
+	run: async  (client: Client, interaction: CommandInteraction) => {
 		/*const cancel = new ButtonBuilder()
             .setCustomId(`startForm`)
             .setLabel(`Form Test`)

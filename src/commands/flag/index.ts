@@ -1,3 +1,5 @@
+import { Client, CommandInteraction, Interaction, SlashCommandSubcommandBuilder } from "discord.js";
+
 /* eslint-disable no-case-declarations */
 const { SlashCommandBuilder } = require(`discord.js`);
 const { fetchAccount, updateAccount } = require(`../../utils/account`);
@@ -6,7 +8,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName(`bandeira`)
 		.setDescription(`Gerencie sua bandeira.`)
-		.addSubcommand((subcommand) =>
+		.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 			subcommand
 				.setName(`trocar`)
 				.setDescription(`Troque qual bandeira aparecerá.`)
@@ -22,7 +24,7 @@ module.exports = {
 	 * @param {import("discord.js").Client} client
 	 * @param {import("discord.js").CommandInteraction} interaction
 	 */
-	run: async (client, interaction) => {
+	run: async (client: Client, interaction: CommandInteraction) => {
 		const { options, member } = interaction;
 		const token = client.tokenApi;
 

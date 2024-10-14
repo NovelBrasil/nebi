@@ -1,3 +1,5 @@
+import { Client, CommandInteraction, Interaction, SlashCommandSubcommandBuilder } from "discord.js";
+
 const { SlashCommandBuilder, PermissionFlagsBits } = require(`discord.js`);
 const { fetchAccount, updateAccount } = require(`../../utils/account`);
 const ms = require("ms");
@@ -7,7 +9,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName(`admin`)
 		.setDescription(`Veja seu profile.`)
-		.addSubcommand((sub) =>
+		.addSubcommand((sub: SlashCommandSubcommandBuilder) =>
 			sub
 				.setName(`boost`)
 				.setDescription(`Gerenciar boost.`)
@@ -38,7 +40,7 @@ module.exports = {
 						.setRequired(false),
 				),
 		)
-		.addSubcommand((sub) =>
+		.addSubcommand((sub: SlashCommandSubcommandBuilder) =>
 			sub
 				.setName(`glows`)
 				.setDescription(`Gerenciar glows.`)
@@ -61,7 +63,7 @@ module.exports = {
 						.setRequired(true),
 				),
 		)
-		.addSubcommand((sub) =>
+		.addSubcommand((sub: SlashCommandSubcommandBuilder) =>
 			sub
 				.setName(`medalhas`)
 				.setDescription(`Gerenciar medalhas.`)
@@ -92,7 +94,7 @@ module.exports = {
 	 * @param {import("discord.js").Client} client
 	 * @param {import("discord.js").CommandInteraction} interaction
 	 */
-	run: async (client, interaction) => {
+	run: async (client: Client, interaction: CommandInteraction) => {
 		const { options } = interaction;
 		const token = client.tokenApi;
 		const subcommand = options.data[0];
