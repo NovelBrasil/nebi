@@ -162,8 +162,12 @@ module.exports = {
 					await member.roles.remove(tutorData.roleId);
 			} else
 				await addStudent(
-					target.id,
-					{ AtualUsername: target.username, Nickname: member.nickname, Tutor },
+					{
+						userId: target.id,
+						username: target.username,
+						nickname: member.nickname ?? target.username,
+						tutor: Tutor,
+					},
 					token,
 					client,
 				);

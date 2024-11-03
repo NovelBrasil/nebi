@@ -1,21 +1,20 @@
 const { default: axios } = require(`axios`);
 
 /**
- * @param {String} userId
- * @param {{ AtualUsername: String, Nickname: String, Tutor: String }} data
+ * @param {{ userId: String, username: String, nickname: String, tutor: String }} data
  * @param {String} token
  * @returns {Promise<void>}
  */
-const addStudent = async (userId, data, token, client) => {
+const addStudent = async (data, token, client) => {
 	try {
-		await axios.post(`${process.env.NEBI_API_URL}/student/${userId}`, data, {
+		await axios.post(`${process.env.NEBI_API_URL}/student`, data, {
 			headers: {
 				Authorization: token,
 			},
 		});
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401)
+		if (response?.status == 401)
 			return client.emit(
 				`errorApi`,
 				err,
@@ -44,7 +43,7 @@ const updateStudentTutor = async (userId, data, token, client) => {
 		);
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401)
+		if (response?.status == 401)
 			return client.emit(
 				`errorApi`,
 				err,
@@ -73,7 +72,7 @@ const existStudent = async (userId, token, client) => {
 		return data;
 	} catch (err) {
 		const response = err.response;
-		if (response.status == 401)
+		if (response?.status == 401)
 			return client.emit(
 				`errorApi`,
 				err,
