@@ -1,6 +1,6 @@
 {
   "name": "nebi",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "🤖📚 | Bot do Discord criado para comunidade da Novel Brasil!",
   "main": "src/index.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "@discordjs/voice": "^0.16.1",
     "@novelbrasil/discord.js-embed-menu": "^1.2.5",
     "axios": "^1.6.7",
+    "axios-cache-interceptor": "^1.6.2",
     "chalk": "^4.1.2",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",

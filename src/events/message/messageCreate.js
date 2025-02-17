@@ -2,9 +2,6 @@ const { ChannelType } = require(`discord.js`);
 const { createAccount, fetchAccount, updateAccount } = require(
 	`../../utils/account`,
 );
-const { addMessage, getMessage, deleteMessage } = require(
-	`../../utils/messageApi`,
-);
 const { fetchBoost } = require("../../commands/admin/boost");
 
 const addXp = (mensagemTamanho = 1) => {
@@ -24,7 +21,6 @@ module.exports = async (client, messageCreated) => {
 	if (messageCreated.channel.type == ChannelType.DM) return;
 
 	const token = client.tokenApi;
-
 	const member = messageCreated.member;
 	try {
 		const account = await fetchAccount(member, token);
@@ -35,14 +31,6 @@ module.exports = async (client, messageCreated) => {
 			const today = new Date();
 
 			if (today > joined) await createAccount(member, token);
-			else {
-				const messages = await getMessage(member, token);
-				if (messages && messages.count >= 30) {
-					await createAccount(member, token);
-					await deleteMessage(messages.id, token, client);
-				}
-				await addMessage(member, token);
-			}
 			return;
 		}
 		messageCreated.content = messageCreated.content.replace(/(.)\1+/g, "$1");

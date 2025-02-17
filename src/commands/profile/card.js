@@ -1,4 +1,4 @@
-const { default: axios } = require(`axios`);
+const { axios } = require("../../services/api");
 const { numberDecimal } = require(`../../utils/numberFormat`);
 
 /**
@@ -20,7 +20,7 @@ const createCard = async (member, token, account) => {
 			data: { data: result },
 			status,
 		} = await axios.post(
-			`${process.env.NEBI_API_URL}/user/${member.id}/profile`,
+			`/user/${member.user.id}/profile`,
 			{
 				...account,
 				avatar,

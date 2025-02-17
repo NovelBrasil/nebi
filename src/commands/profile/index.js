@@ -70,7 +70,6 @@ module.exports = {
 		}
 
 		const account = await fetchAccount(member, token);
-
 		if (subcommand.name == `ver`) {
 			const card = await createCard(member, token, account);
 			const attachment = new AttachmentBuilder(card, { name: `profile.png` });

@@ -10,7 +10,7 @@ function readJSON(fileName) {
 		const dataJSON = fs.readFileSync(fileName, `utf-8`);
 		const data = JSON.parse(dataJSON);
 		return data;
-	} catch (error) {
+	} catch (_error) {
 		return undefined;
 	}
 }

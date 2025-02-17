@@ -252,7 +252,7 @@ module.exports = class FormManager {
 				await response.update({ fetchReply: true });
 				return response.customId.split(`-`)[1];
 			} // Using keys to solve statement repetition problem
-			case `select`:
+			case `select`: {
 				const optionsWithEmoji = [];
 				for (const v of data.options) {
 					optionsWithEmoji.push({
@@ -274,6 +274,7 @@ module.exports = class FormManager {
 				const response = await this.#awaitSomething(message.channel, id);
 				await response.update({ fetchReply: true });
 				return response.values.at(0);
+			}
 			default:
 				throw Error(
 					`O tipo ${data.type} não foi encontrado. Reporte isso para um membro da equipe de TI. Sentimentos muito pelo transtorno.`,

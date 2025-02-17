@@ -1,4 +1,4 @@
-const { default: axios } = require(`axios`);
+const { axios } = require("../services/api");
 
 /**
  * @param {import("discord.js").GuildMember} member
@@ -21,15 +21,11 @@ const createAccount = async (member, token) => {
 			userid: userid,
 			xp: 0,
 		};
-		const response = await axios.post(
-			`${process.env.NEBI_API_URL}/user`,
-			payload,
-			{
-				headers: {
-					Authorization: token,
-				},
+		const response = await axios.post(`/user`, payload, {
+			headers: {
+				Authorization: token,
 			},
-		);
+		});
 		if (response.status == 201) return true;
 	} catch (err) {
 		const response = err.response;
@@ -50,16 +46,14 @@ const createAccount = async (member, token) => {
  */
 const ranking = async (token, client) => {
 	try {
-		const client = axios.create({
-			baseURL: `${process.env.NEBI_API_URL}/user`,
+		const {
+			data: { position: rank, ...rest },
+			status,
+		} = await axios.get(`/user/ranking`, {
 			headers: {
 				Authorization: token,
 			},
 		});
-		const {
-			data: { position: rank, ...rest },
-			status,
-		} = await client.get(`/ranking`);
 		if (status === 204) return undefined;
 		return { ...rest, rank };
 	} catch (err) {
@@ -84,16 +78,14 @@ const fetchAccount = async (member, token) => {
 	const client = member.client;
 	const userId = member.id;
 	try {
-		const client = axios.create({
-			baseURL: `${process.env.NEBI_API_URL}/user`,
+		const {
+			data: { position: rank, ...rest },
+			status,
+		} = await axios.get(`/user/${userId}/ranking`, {
 			headers: {
 				Authorization: token,
 			},
 		});
-		const {
-			data: { position: rank, ...rest },
-			status,
-		} = await client.get(`/${userId}/ranking`);
 		if (status === 204) return undefined;
 		return { ...rest, rank };
 	} catch (err) {
@@ -118,15 +110,11 @@ const fetchAccount = async (member, token) => {
 const updateAccount = async (userId, account, token, client) => {
 	try {
 		if (!userId) throw new Error(`userId is required`);
-		const response = await axios.put(
-			`${process.env.NEBI_API_URL}/user/${userId}`,
-			account,
-			{
-				headers: {
-					Authorization: token,
-				},
+		const response = await axios.put(`/user/${userId}`, account, {
+			headers: {
+				Authorization: token,
 			},
-		);
+		});
 		if (response.status == 200) {
 			return response.data.message;
 		}
@@ -151,14 +139,11 @@ const updateAccount = async (userId, account, token, client) => {
  */
 const deleteAccount = async (userId, token, client) => {
 	try {
-		const response = await axios.delete(
-			`${process.env.NEBI_API_URL}/user/${userId}`,
-			{
-				headers: {
-					Authorization: token,
-				},
+		const response = await axios.delete(`/user/${userId}`, {
+			headers: {
+				Authorization: token,
 			},
-		);
+		});
 		return response.status == 204;
 	} catch (err) {
 		const response = err.response;
