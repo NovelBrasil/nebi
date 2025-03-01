@@ -3,6 +3,7 @@ const { createAccount, fetchAccount, updateAccount } = require(
 	`../../utils/account`,
 );
 const { fetchBoost } = require("../../commands/admin/boost");
+const { getData } = require("../../commands/info/dataApi");
 
 const addXp = (mensagemTamanho = 1) => {
 	const xpAleatorio = Math.floor(Math.random() * 9) + 1;
@@ -21,6 +22,27 @@ module.exports = async (client, messageCreated) => {
 	if (messageCreated.channel.type == ChannelType.DM) return;
 
 	const token = client.tokenApi;
+	const desenhos_channel_id = await getData("desenhos", token, client);
+	if (
+		desenhos_channel_id &&
+		messageCreated.channel.id === desenhos_channel_id
+	) {
+		if (messageCreated.attachments.size === 0) {
+			await messageCreated.delete();
+			return;
+		}
+		const thread_title =
+			messageCreated.content &&
+			messageCreated.content.length &&
+			messageCreated.content.length < 32
+				? messageCreated.content
+				: "Desenho";
+		await messageCreated.startThread({
+			name: thread_title + " por: " + messageCreated.author.username + " 🎨",
+		});
+		return;
+	}
+
 	const member = messageCreated.member;
 	try {
 		const account = await fetchAccount(member, token);
