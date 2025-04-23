@@ -22,7 +22,7 @@ function Log(client, user, title, description) {
 	});
 }
 
-function handleJoinVC(client, user, guild, channelId) {
+function handleJoinVC(client, user, guildId, channelId) {
 	Log(client, user, "Usuário entrou em canal de voz", `Um usuário entrou no canal de voz https://discord.com/channels/${guildId}/${channelId}`)
 }
 
