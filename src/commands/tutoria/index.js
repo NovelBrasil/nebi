@@ -77,11 +77,11 @@ module.exports = {
 		let Tutor = `SemTutor`;
 		let roleId = undefined;
 
+        await interaction.deferReply();
+
 		const studentRole = await checkRole(client, `student`);
 		const classFRole = await checkRole(client, `classeF`);
 		const noClassRole = await checkRole(client, `noClass`);
-
-		await interaction.deferReply();
 
 		if (subcommand.name == `adicionar`) {
 			const tutorUser = options.getUser(`tutor`);
