@@ -4,6 +4,7 @@ const { createAccount, fetchAccount, updateAccount } = require(
 );
 const { fetchBoost } = require("../../commands/admin/boost");
 const { getData } = require("../../commands/info/dataApi");
+const { ask } = require("../../services/groq");
 
 const addXp = (mensagemTamanho = 1) => {
 	const xpAleatorio = Math.floor(Math.random() * 9) + 1;
@@ -17,71 +18,80 @@ const addXp = (mensagemTamanho = 1) => {
  * @param {import("discord.js").Message} messageCreated
  */
 module.exports = async (client, messageCreated) => {
-	if (!messageCreated) return;
-	if (messageCreated.author.bot) return;
-	if (messageCreated.channel.type == ChannelType.DM) return;
+    if (!messageCreated) return;
+    if (messageCreated.author.bot) return;
+    if (messageCreated.channel.type == ChannelType.DM) return;
 
-	const token = client.tokenApi;
-	const desenhos_channel_id = await getData("desenhos", token, client);
-	if (
-		desenhos_channel_id &&
-		messageCreated.channel.id === desenhos_channel_id
-	) {
-		if (messageCreated.attachments.size === 0) {
-			await messageCreated.delete();
-			return;
-		}
-		const thread_title =
-			messageCreated.content &&
-			messageCreated.content.length &&
-			messageCreated.content.length < 32
-				? messageCreated.content
-				: "Desenho";
-		await messageCreated.startThread({
-			name: thread_title + " por: " + messageCreated.author.username + " 🎨",
-		});
-		return;
-	}
+    const isBotMentioned = messageCreated.mentions.users.has(client.user.id);
+    if (isBotMentioned) {
+        const cleanContent = messageCreated.content.replace(new RegExp(`<@!?${client.user.id}>`, 'g'), '').trim();
+        await messageCreated.channel.sendTyping();
+        const response = await ask(cleanContent);
+        await messageCreated.reply(response);
+        return;
+    }
 
-	const member = messageCreated.member;
-	try {
-		const account = await fetchAccount(member, token);
-		if (!account) {
-			const joined = member.joinedAt;
-			joined.setMonth(joined.getMonth() + 1);
+    const token = client.tokenApi;
+    const desenhos_channel_id = await getData("desenhos", token, client);
+    if (
+        desenhos_channel_id &&
+        messageCreated.channel.id === desenhos_channel_id
+    ) {
+        if (messageCreated.attachments.size === 0) {
+            await messageCreated.delete();
+            return;
+        }
+        const thread_title =
+            messageCreated.content &&
+            messageCreated.content.length &&
+            messageCreated.content.length < 32
+                ? messageCreated.content
+                : "Desenho";
+        await messageCreated.startThread({
+            name: thread_title + " por: " + messageCreated.author.username + " 🎨",
+        });
+        return;
+    }
 
-			const today = new Date();
+    const member = messageCreated.member;
+    try {
+        const account = await fetchAccount(member, token);
+        if (!account) {
+            const joined = member.joinedAt;
+            joined.setMonth(joined.getMonth() + 1);
 
-			if (today > joined) await createAccount(member, token);
-			return;
-		}
-		messageCreated.content = messageCreated.content.replace(/(.)\1+/g, "$1");
-		if (messageCreated.content.length < 5) return;
-		const messages = await messageCreated.channel.messages.fetch({
-			limit: 10,
-			before: messageCreated.id,
-		});
-		const lastMessage = messages.find(
-			(msg) => msg.author.id === messageCreated.author.id,
-		);
-		if (lastMessage && lastMessage.content === messageCreated.content) return;
-		if (client.addCooldown(member.id, 10)) {
-			let boost = 0;
-			if (account.boost) {
-				const { expireIn, multiplier } = await fetchBoost(
-					account.boost,
-					token,
-					client,
-				);
-				const date = new Date(expireIn);
-				if (date > new Date()) boost = multiplier;
-				else await updateAccount(account.id, { boost: null }, token, client);
-			}
-			const xp_random = addXp(messageCreated.content.length);
-			account.xp += xp_random + xp_random * boost;
-			await updateAccount(account.id, { xp: account.xp }, token, client);
-		}
-	} catch (err) {
-		console.log(err);
-	}
+            const today = new Date();
+
+            if (today > joined) await createAccount(member, token);
+            return;
+        }
+        messageCreated.content = messageCreated.content.replace(/(.)\1+/g, "$1");
+        if (messageCreated.content.length < 5) return;
+        const messages = await messageCreated.channel.messages.fetch({
+            limit: 10,
+            before: messageCreated.id,
+        });
+        const lastMessage = messages.find(
+            (msg) => msg.author.id === messageCreated.author.id,
+        );
+        if (lastMessage && lastMessage.content === messageCreated.content) return;
+        if (client.addCooldown(member.id, 10)) {
+            let boost = 0;
+            if (account.boost) {
+                const { expireIn, multiplier } = await fetchBoost(
+                    account.boost,
+                    token,
+                    client,
+                );
+                const date = new Date(expireIn);
+                if (date > new Date()) boost = multiplier;
+                else await updateAccount(account.id, { boost: null }, token, client);
+            }
+            const xp_random = addXp(messageCreated.content.length);
+            account.xp += xp_random + xp_random * boost;
+            await updateAccount(account.id, { xp: account.xp }, token, client);
+        }
+    } catch (err) {
+        console.log(err);
+    }
 };
