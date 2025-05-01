@@ -35,7 +35,7 @@ class CommandHandler {
 					// Skip loading this command
 					continue;
 				}
-				if (!(folder in featureFlags)) {
+				if (!(folder in featureFlags) && !folder.endsWith(`.js`)) {
 					console.log(`Command ${folder} not in featureFlags, please add it to the list.`);
 				}
 				const path_final = `${process.cwd()}/${commands_path}/${dirs}/${folder}`;
