@@ -49,7 +49,7 @@ const client = new Client({
 
 // Config
 const config = new DiscordConfig();
-config.setDevMode(false);
+config.setDevMode(true);
 client.config = config;
 
 const flags = new FlagsConfig();
