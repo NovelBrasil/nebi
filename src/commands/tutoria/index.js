@@ -77,7 +77,7 @@ module.exports = {
 		let Tutor = `SemTutor`;
 		let roleId = undefined;
 
-        await interaction.deferReply();
+		await interaction.deferReply();
 
 		const studentRole = await checkRole(client, `student`);
 		const classFRole = await checkRole(client, `classeF`);

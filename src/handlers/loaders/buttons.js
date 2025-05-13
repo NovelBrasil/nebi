@@ -5,7 +5,7 @@ const featureFlags = {
 	"approveButton.js": true,
 	"openTicket.js": true,
 	"startFormButton.js": true,
-}
+};
 
 class ButtonsHandler {
 	/**
@@ -27,7 +27,9 @@ class ButtonsHandler {
 					continue;
 				}
 				if (!(file in featureFlags)) {
-					console.log(`Button ${file} not in featureFlags, please add it to the list.`);
+					console.log(
+						`Button ${file} not in featureFlags, please add it to the list.`,
+					);
 				}
 				const path_final = `${process.cwd()}/${buttons_path}/${file}`;
 				const button = require(path_final);
