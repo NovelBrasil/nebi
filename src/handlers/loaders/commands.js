@@ -1,6 +1,19 @@
 const { REST, Routes } = require(`discord.js`);
 const fs = require(`fs`);
 
+const featureFlags = {
+	"admin": true,
+	"badges": true,
+	"boost": true,
+	"flag": true,
+	"info": true,
+	"ping": true,
+	"profile": true,
+	"ranking": true,
+	"ticket": true,
+	"tutoria": true,
+}
+
 class CommandHandler {
 	/**
 	 * @param {import("discord.js").Client} client
@@ -18,6 +31,13 @@ class CommandHandler {
 				.filter((files) => files.endsWith(`.js`));
 
 			for (const folder of commandFolders) {
+				if (folder in featureFlags && featureFlags[folder] === false) {
+					// Skip loading this command
+					continue;
+				}
+				if (!(folder in featureFlags) && !folder.endsWith(`.js`)) {
+					console.log(`Command ${folder} not in featureFlags, please add it to the list.`);
+				}
 				const path_final = `${process.cwd()}/${commands_path}/${dirs}/${folder}`;
 				const command = require(path_final);
 				if (!command.data) continue;
