@@ -88,7 +88,7 @@ module.exports = {
 			const title = options.getString("titulo");
 			const type = options.getString("tipo");
 			const format = options.getString("formato");
-			const tagId = options.getString("tags");
+			const tagArg = options.getString("tags");
 			const hasFireplumeText = options.getBoolean("fireplume"); // Get the boolean value
 
 			// We no longer need to fetch tags and validate the channel here,
@@ -110,6 +110,16 @@ module.exports = {
 			const tagFireplume = forumChannel.availableTags.find(
 				(r) => r.name === `Fireplume`,
 			).id;
+
+			let tagId
+			if (!isNaN(tagArg)) tagId = tagArg
+			else {
+				const tag = forumChannel.availableTags.find(
+					(r) => r.name.toLowerCase() === tagArg.toLowerCase(),
+				)
+				if (tag == undefined) throw new Error("ERRO: não foi possível encontrar a tag enviada")
+				tagId = tag.id
+			}
 
 			try {
                 const messageContent = `**Tipo:** ${type}\n**Formato:** ${format}\n**Tem texto no Fireplume?** ${hasFireplumeText ? 'Sim' : 'Não'}\n\n*Tópico criado por <@${interaction.user.id}>*`;
