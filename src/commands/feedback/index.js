@@ -112,22 +112,15 @@ module.exports = {
 			).id;
 
 			let tagId
-			if (!isNaN(tagArg)) {
-				tagId = tagArg
-			}
+			if (!isNaN(tagArg)) tagId = tagArg
 			else {
 				const tag = forumChannel.availableTags.find(
-					(r) => r.name === tagArg,
+					(r) => r.name.toLowerCase() === tagArg.toLowerCase(),
 				)
-				if (tag == undefined) {
-					interaction.editReply({
-						content: "ERRO: não foi possível encontrar a tag enviada"
-					})
-					return
-				}
+				if (tag == undefined) throw new Error("ERRO: não foi possível encontrar a tag enviada")
 				tagId = tag.id
 			}
-			
+
 			try {
                 const messageContent = `**Tipo:** ${type}\n**Formato:** ${format}\n**Tem texto no Fireplume?** ${hasFireplumeText ? 'Sim' : 'Não'}\n\n*Tópico criado por <@${interaction.user.id}>*`;
                 // const components = new ContainerBuilder().addTextDisplayComponents(
