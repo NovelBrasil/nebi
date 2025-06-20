@@ -15,7 +15,7 @@ class FlagsConfig {
 	 * @returns {String}
 	 */
 	async load() {
-		const response = await axios.get(`https://restcountries.com/v3.1/all`);
+		const response = await axios.get(`https://restcountries.com/v3.1/all?fields=flag,flags`);
 		if (response.status == 200) {
 			for (const data of response.data) {
 				const flag = String(data.flags.png)

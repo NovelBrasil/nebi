@@ -33,15 +33,15 @@ module.exports = {
 			.setTimestamp();
 
 		try {
-			// await interaction.user.send({ embeds: [embed], components: [row] });
-			// await interaction.reply({
-			// 	content: `Sua matrícula será feita no **privado**! Eu enviei a mensagem, por favor, continue por lá.`,
-			// 	ephemeral: true,
-			// });
+			await interaction.user.send({ embeds: [embed], components: [row] });
 			await interaction.reply({
-				content: `Nossa tutoria está lotada e por isso as matrículas foram temporariamente suspensas.`,
+				content: `Sua matrícula será feita no **privado**! Eu enviei a mensagem, por favor, continue por lá.`,
 				ephemeral: true,
 			});
+			// await interaction.reply({
+			// 	content: `Nossa tutoria está lotada e por isso as matrículas foram temporariamente suspensas.`,
+			// 	ephemeral: true,
+			// });
 		} catch (_error) {
 			await interaction
 				.reply({
