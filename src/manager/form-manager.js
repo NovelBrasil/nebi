@@ -200,6 +200,7 @@ module.exports = class FormManager {
 				// console.log(this.#getResponseById(interaction.user.id, id))
 			}
 		}
+        await interaction.user.send({ content: `Obrigado por responder as perguntas! Agora, aguarde a análise do seu formulário.` });
 		await this.send(interaction);
 	}
 
